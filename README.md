@@ -16,7 +16,7 @@ cd desktop/client && npm i
 
 ## Configuration
 1. obtain your openai api key from [here](https://openai.com)
-2. enter it into the app and start chatting. *it will be stored only in memory and not saved across sessions
+2. run the app, click API Key, enter it, start chatting. *it will be stored only in memory and not saved across sessions
 
 ### Client Development
 1. `cd client`
