@@ -1,4 +1,5 @@
 const { BrowserWindow, app } = require('electron')
+const path = require('path')
 
 let mainWindow = null
 
@@ -8,7 +9,8 @@ function main() {
     width: 1024,
     height: 768,
     webPreferences: {
-        nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
     }
   })
   mainWindow.on('close', event => {
