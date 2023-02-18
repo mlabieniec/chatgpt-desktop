@@ -4,6 +4,7 @@ import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { Configuration, OpenAIApi } from 'openai'
+import smalltalk from 'smalltalk'
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
@@ -51,37 +52,48 @@ const ChatView = () => {
   const sendMessage = async (e) => {
     e.preventDefault()
 
+    if (!key)
+      return await smalltalk.alert(
+        "API Key Required", 
+        "Click on API Key in the sidebar and add an API key from <a href='https://openai.com/' target='_blank'><ul>openai.com</ul></a>")
+    
     const newMsg = formValue
     const aiModel = selected
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
-    const openai = new OpenAIApi(new Configuration({
-      apiKey: key,
-    }))
-    let response = null;
-    if (aiModel === 'DALL·E') {
-      response = await openai.createImage({
-        prompt: `${newMsg}`,
-        n: 1,
-        size: "512x512",
-      })
-    } else {
-      response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt: `
-  I want you to reply to all my questions in markdown format. 
-  Q: ${newMsg}?.
-  A: `,
-        temperature: 0.5,
-        max_tokens: 500,
-        top_p: 0.5,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.2,
-      })
+      try {
+      const openai = new OpenAIApi(new Configuration({
+        apiKey: key,
+      }))
+      let response = null;
+      if (aiModel === 'DALL·E') {
+        response = await openai.createImage({
+          prompt: `${newMsg}`,
+          n: 1,
+          size: "512x512",
+        })
+      } else {
+        response = await openai.createCompletion({
+          model: 'text-davinci-003',
+          prompt: `
+    I want you to reply to all my questions in markdown format. 
+    Q: ${newMsg}?.
+    A: `,
+          temperature: 0.5,
+          max_tokens: 500,
+          top_p: 0.5,
+          frequency_penalty: 0.5,
+          presence_penalty: 0.2,
+        })
+      }
+      const result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
+      updateMessage(result, true, aiModel)
+    } catch (error) {
+      const message = error + ". Is your API Key Correct?"
+      updateMessage(message, false, aiModel)
     }
-    const result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
-    updateMessage(result, true, aiModel)
+
     setThinking(false)
   }
 

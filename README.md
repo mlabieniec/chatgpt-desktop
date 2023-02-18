@@ -9,25 +9,22 @@ An electron/desktop application for ChatGPT clone.
 
 ## install
 
-### client
+### Running the browser client (dev)
 ```bash
-cd desktop/client && npm i
+cd client && npm i
+npm start
 ```
 
 ## Configuration
 1. obtain your openai api key from [here](https://openai.com)
 2. run the app, click API Key, enter it, start chatting. *it will be stored only in memory and not saved across sessions
 
-### Client Development
-1. `cd client`
-2. `npm start`
-
-## build
+## Build
 ```bash
 cd client && npm run build
 ```
 
-Then update `desktop/index.html` CSS and JS files to point to updated `desktop/client/build` files. Then use forge to build.
+Then update `desktop/index.html` CSS and JS files to point to updated/built `client/` files. Then use forge to build.
 
 ```bash
 cd desktop && npm run package
@@ -45,8 +42,6 @@ npm start
   - tailwindcss
   - react-icons
   - react-markdown
-  - redis
-  - express
 
 
 ## credits

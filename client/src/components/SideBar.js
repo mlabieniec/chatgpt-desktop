@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
-import bot from '../assets/bot.ico'
 import DarkMode from './DarkMode'
 import smalltalk from 'smalltalk'
-import useKeyCollection from '../hooks/useKey'
+import { SiProbot } from 'react-icons/si';
 
 /**
  * A sidebar component that displays a list of nav items and a toggle 
@@ -33,7 +32,7 @@ const SideBar = () => {
       if (key);
         setLast4(key.substr(key.length-4, 4));
     } catch (error) {}
-    const msg = (last4)?`Your Current API Key ends in "${last4}"`:''
+    const msg = (last4)?`Your current API Key ends in "${last4}"`:''
     const key = await smalltalk.prompt("Please enter your OpenAI API Key", msg)
     if (!key) return;
     setLast4(key.substr(key.length-4, 4));
@@ -44,10 +43,12 @@ const SideBar = () => {
     <section className={` ${open ? "w-72" : "w-20 "} sidebar`}>
       <div className="sidebar__app-bar">
         <div className={`sidebar__app-logo ${!open && "scale-0 hidden"}`}>
-          <span className='w-8 h-8'><img src="bot.ico" alt="" /></span>
+          <span className='w-8 h-8'>
+            <SiProbot size={32} />
+          </span>
         </div>
         <h1 className={`sidebar__app-title ${!open && "scale-0 hidden"}`}>
-          GPT3-Chatbot
+          My ChatGPT
         </h1>
         <div className='sidebar__btn-close' onClick={() => setOpen(!open)}>
           {open ? <MdClose className='sidebar__btn-icon' /> : <MdMenu className='sidebar__btn-icon' />}
