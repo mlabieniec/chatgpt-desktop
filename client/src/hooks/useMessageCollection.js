@@ -8,11 +8,14 @@ import { useState } from 'react'
 const useMessageCollection = () => {
   const initialMsg = {
     id: 1,
+    chat: 1,
     createdAt: Date.now(),
     text: '**Hello!** *How can I help you today?*',
     ai: true
   }
-  const [messages, setMessages] = useState([initialMsg]);
+  const [messages, setMessages] = useState({
+    1: [initialMsg]
+  })
 
   /**
   * A function for adding a new message to the collection.
@@ -20,12 +23,38 @@ const useMessageCollection = () => {
   * @param {Object} message - The message to add to the collection.
   */
   const addMessage = (message) => {
-    setMessages((prev) => [...prev, message]);
+    setMessages((prev) => {
+      const result = prev
+      const item = (prev && prev[message.chat])?[...prev[message.chat], message]:[message]
+      result[message.chat] = item
+      return result
+    });
   }
 
-  const clearMessages = () => setMessages([initialMsg])
+  const clearMessages = (chat) => {
+    setMessages((prev) => {
+      const result = prev
+      delete result[chat]
+      return result
+    })
+  }
 
-  return [messages, addMessage, clearMessages];
+  const addChat = (id) => {
+    setMessages(() => {
+      let result = messages
+      let newDefaultMessage = {
+        id: Date.now() + Math.floor(Math.random() * 1000000),
+        chat: id,
+        createdAt: Date.now(),
+        text: `**Hello!** *How can I help you today?*`,
+        ai: true
+      };
+      result[id] = [newDefaultMessage]
+      return result;
+    })
+  }
+
+  return [messages, addMessage, clearMessages, addChat];
 }
 
 export default useMessageCollection

@@ -12,6 +12,7 @@ node_modules
 /build
 out
 publish.ps1
+preferences.json
 
 # misc
 .DS_Store

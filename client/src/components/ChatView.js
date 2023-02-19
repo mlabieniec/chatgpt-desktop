@@ -8,7 +8,7 @@ import smalltalk from 'smalltalk'
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
-const ChatView = () => {
+const ChatView = (props) => {
   const messagesEndRef = useRef()
   const inputRef = useRef()
   const [formValue, setFormValue] = useState('')
@@ -17,7 +17,6 @@ const ChatView = () => {
   const [selected, setSelected] = useState(options[0])
   const [messages, addMessage] = useContext(ChatContext)
   const [key] = useContext(KeyContext)
-
   /**
    * Scrolls the chat area to the bottom.
    */
@@ -35,12 +34,12 @@ const ChatView = () => {
     const id = Date.now() + Math.floor(Math.random() * 1000000)
     const newMsg = {
       id: id,
+      chat: props.chat,
       createdAt: Date.now(),
       text: newValue,
       ai: ai,
       selected: `${selected}`
     }
-
     addMessage(newMsg)
   }
 
@@ -59,6 +58,7 @@ const ChatView = () => {
     
     const newMsg = formValue
     const aiModel = selected
+    let result = ""
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
@@ -87,13 +87,12 @@ const ChatView = () => {
           presence_penalty: 0.2,
         })
       }
-      const result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
-      updateMessage(result, true, aiModel)
+      result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
     } catch (error) {
-      const message = error + ". Is your API Key Correct?"
-      updateMessage(message, false, aiModel)
+      result = error + ". Is your API Key Correct?"
     }
 
+    updateMessage(result, true, aiModel)
     setThinking(false)
   }
 
@@ -115,7 +114,7 @@ const ChatView = () => {
     <div className="chatview">
       <main className='chatview__chatarea'>
 
-        {messages.map((message, index) => (
+        {messages[props.chat].map((message, index) => (
           <ChatMessage key={index} message={{ ...message }} />
         ))}
 

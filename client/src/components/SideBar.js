@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt } from 'react-icons/md'
+import React, { useState, useContext, useEffect, useRef } from 'react'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -12,10 +12,13 @@ import { SiProbot } from 'react-icons/si';
  * 
  * @param {Object} props - The properties for the component.
  */
-const SideBar = () => {
+const SideBar = (props) => {
+  const chatsEndRef = useRef()
   const [open, setOpen] = useState(true)
-  const [, , clearMessages] = useContext(ChatContext)
-  const [key, addKey] = useContext(KeyContext);
+  const [messages, addMessage, clearMessages, addChat] = useContext(ChatContext)
+  const [key, addKey] = useContext(KeyContext)
+  const [chats, setChats] = useState([1])
+  const [selectedChat, setSelectedChat] = useState(1)
   /**
    * Toggles the dark mode.
    */
@@ -24,6 +27,36 @@ const SideBar = () => {
     clearChat()
     window.sessionStorage.clear()
   }
+
+  const scrollToBottom = () => {
+    chatsEndRef.current?.scrollIntoView({behavior: "smooth"})
+  }
+
+  useEffect(() => {
+    if (window.electronAPI && window.electronAPI.api) {
+      window.electronAPI.api.receive("fromMain", (data) => {
+        addKey(data)
+        setLast4(data.substr(data.length-4, 4))
+      })
+      if (!key)
+        window.electronAPI.getKey()
+    } else {
+      // DEV
+      //addKey('test')
+      //setLast4('test')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (messages) {
+      setChats(Object.keys(messages))
+    }
+  }, [messages])
+
+  useEffect(() => {
+    setSelectedChat(chats[chats.length-1])
+    props.handleChatChange(chats[chats.length-1])
+  }, [chats])
 
   const [last4, setLast4] = useState("");
 
@@ -37,6 +70,32 @@ const SideBar = () => {
     if (!key) return;
     setLast4(key.substr(key.length-4, 4));
     addKey(key);
+
+    if (window.electronAPI)
+      window.electronAPI.setKey(key)
+  }
+
+  const loadChat = (chat) => {
+    props.handleChatChange(chat)
+    setSelectedChat(chat)
+  }
+
+  const deleteChat = (chat) => {
+    if (chat === '1') return;
+    clearMessages(chat)
+    setChats(Object.keys(messages))
+  }
+
+  const newChat = async () => {
+    let chats = Object.keys(messages)
+    let nextId = chats.length + 1
+    let chatName = await smalltalk.prompt('New Chat', `Enter a short descriptive name for your chat`, `Chat ${nextId}`)
+
+    props.handleChatChange(chatName)
+    addChat(chatName)
+    setChats(Object.keys(messages))
+    setSelectedChat(chatName)
+    setTimeout(scrollToBottom, 200)
   }
 
   return (
@@ -52,18 +111,40 @@ const SideBar = () => {
         </h1>
         <div className='sidebar__btn-close' onClick={() => setOpen(!open)}>
           {open ? <MdClose className='sidebar__btn-icon' /> : <MdMenu className='sidebar__btn-icon' />}
-
         </div>
       </div>
       <div className="nav">
-        <span className='nav__item  bg-light-white' onClick={clearChat}>
+        <span className='nav__item' onClick={newChat}>
           <div className='nav__icons'>
             <MdAdd />
           </div>
-          <h1 className={`${!open && "hidden"}`}>New chat</h1>
+          <h1 className={`${!open && "hidden"}`}>New Chat</h1>
         </span>
       </div>
-
+      
+      <div className='nav__chats'>
+        {chats.map((chat, index) => (
+          <div className="nav" key={index}>
+            <span className={`chats__item ${(selectedChat === chat) && 'bg-light-white'}`}>
+              <div className='nav__icons'>
+                <MdChatBubble onClick={() => loadChat(chat)} title="Load this chat"/>
+              </div>
+              <h1 onClick={() => loadChat(chat)} className={`${!open && "hidden"} nav-chat-name`}>{chat === '1' && 'Chat' || chat}</h1>
+              <span className='nav__spacer'></span>
+              <div className={`nav__actions ${!open && "hidden"}`}>
+                <span className={`${!open && "hidden"} nav-chat-open`} onClick={() => loadChat(chat)} title="Load this chat">
+                  <MdOutlineOpenInNew size={18} />
+                </span>
+                &nbsp;&nbsp;
+                  <span className={`${!open && "hidden"} ${chat === '1' && "disabled"} ${chat !== '1' && "nav-chat-delete"}`} onClick={() => deleteChat(chat)} title="Delete this chat">
+                    <MdDelete size={18}/>
+                  </span>
+              </div>
+            </span>
+          </div>
+        ))}
+        <div ref={chatsEndRef}></div>
+      </div>
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
@@ -88,15 +169,16 @@ const SideBar = () => {
             <h1 className={`${!open && "hidden"}`}>Update & FAQ</h1>
           </a>
         </div>
-        <div className="nav">
-          <span className="nav__item" onClick={SignOut}>
-            <div className="nav__icons">
-              <MdOutlineLogout />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>Log out</h1>
-          </span>
-        </div>
+          <div className="nav">
+            <span className="nav__item" onClick={SignOut}>
+              <div className="nav__icons">
+                <MdOutlineLogout />
+              </div>
+              <h1 className={`${!open && "hidden"}`}>Clear Chat</h1>
+            </span>
+          </div>
       </div>
+
     </section >
   )
 }

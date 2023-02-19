@@ -15,10 +15,10 @@ const ChatContext = createContext({})
  * @returns {JSX.Element} A ChatContext.Provider element.
  */
 const ChatContextProvider = (props) => {
-  const [messages, setMessages, clearMessages] = useMessageCollection([])
+  const [messages, setMessages, clearMessages, addChat] = useMessageCollection([])
 
   return (
-    <ChatContext.Provider value={[messages, setMessages, clearMessages]}>
+    <ChatContext.Provider value={[messages, setMessages, clearMessages, addChat]}>
       {props.children}
     </ChatContext.Provider>
   )

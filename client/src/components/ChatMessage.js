@@ -6,14 +6,14 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import remarkGfm from 'remark-gfm'
 import moment from 'moment'
 import Image from './Image'
-
+import { SiProbot } from 'react-icons/si';
 /**
  * A chat message component that displays a message with a timestamp and an icon.
  *
  * @param {Object} props - The properties for the component.
  */
 const ChatMessage = (props) => {
-  const { id, createdAt, text, ai = false, selected } = props.message
+  const { id, chat, createdAt, text, ai = false, selected } = props.message
 
   return (
     <div key={id} className={`${ai && 'flex-row-reverse'} message`}>
@@ -43,7 +43,7 @@ const ChatMessage = (props) => {
 
       <div className="message__pic">
         {
-          ai ? <MdComputer /> : <MdPersonOutline />
+          ai ? (<SiProbot />) : <MdPersonOutline />
         }
       </div>
     </div>
