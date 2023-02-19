@@ -11,9 +11,8 @@ node_modules
 # production
 /build
 out
-publish.ps1
-preferences.json
-.data.json
+build.ps1
+data.json
 
 # misc
 .DS_Store
