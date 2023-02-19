@@ -94,6 +94,10 @@ const ChatView = (props) => {
 
     updateMessage(result, true, aiModel)
     setThinking(false)
+
+    if (window.electronAPI) {
+      window.electronAPI.setChats(messages)
+    }
   }
 
   /**

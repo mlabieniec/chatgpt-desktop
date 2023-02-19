@@ -15,7 +15,7 @@ import { SiProbot } from 'react-icons/si';
 const SideBar = (props) => {
   const chatsEndRef = useRef()
   const [open, setOpen] = useState(true)
-  const [messages, addMessage, clearMessages, addChat] = useContext(ChatContext)
+  const [messages, setMessages, clearMessages, addChat, initMessages] = useContext(ChatContext)
   const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
@@ -31,19 +31,22 @@ const SideBar = (props) => {
   const scrollToBottom = () => {
     chatsEndRef.current?.scrollIntoView({behavior: "smooth"})
   }
-
+  let init = false
   useEffect(() => {
-    if (window.electronAPI && window.electronAPI.api) {
-      window.electronAPI.api.receive("fromMain", (data) => {
-        addKey(data)
-        setLast4(data.substr(data.length-4, 4))
-      })
-      if (!key)
+    if (!init) {
+      init = true
+      if (window.electronAPI && window.electronAPI.api) {
+        window.electronAPI.api.receive("key", (data) => {
+          if (data.apiKey) {
+            addKey(data.apiKey)
+            setLast4(data.apiKey.substr(data.apiKey.length-4, 4))
+          }
+          if (data.chats) {
+            initMessages(data.chats)
+          }
+        })
         window.electronAPI.getKey()
-    } else {
-      // DEV
-      //addKey('test')
-      //setLast4('test')
+      }
     }
   }, [])
 
@@ -71,7 +74,7 @@ const SideBar = (props) => {
     setLast4(key.substr(key.length-4, 4));
     addKey(key);
 
-    if (window.electronAPI)
+    if (window.electronAPI) 
       window.electronAPI.setKey(key)
   }
 
@@ -81,9 +84,12 @@ const SideBar = (props) => {
   }
 
   const deleteChat = (chat) => {
-    if (chat === '1') return;
+    if (messages.lenght === 1) return;
     clearMessages(chat)
     setChats(Object.keys(messages))
+    if (window.electronAPI) {
+      window.electronAPI.setChats(messages)
+    }
   }
 
   const newChat = async () => {

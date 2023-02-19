@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, useEffect } from 'react'
 import useMessageCollection from '../hooks/useMessageCollection'
 
 /**
@@ -15,10 +15,10 @@ const ChatContext = createContext({})
  * @returns {JSX.Element} A ChatContext.Provider element.
  */
 const ChatContextProvider = (props) => {
-  const [messages, setMessages, clearMessages, addChat] = useMessageCollection([])
+  const [messages, setMessages, clearMessages, addChat, initMessages] = useMessageCollection([])
 
   return (
-    <ChatContext.Provider value={[messages, setMessages, clearMessages, addChat]}>
+    <ChatContext.Provider value={[messages, setMessages, clearMessages, addChat, initMessages]}>
       {props.children}
     </ChatContext.Provider>
   )

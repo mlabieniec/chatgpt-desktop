@@ -6,7 +6,8 @@ const { Buffer } = require('node:buffer')
 
 let mainWindow = null
 let preferences = {
-  apiKey: ''
+  apiKey: '',
+  chats: {}
 };
 
 const createWindow = () => {
@@ -19,26 +20,25 @@ const createWindow = () => {
       nodeIntegration: true
     }
   })
-  ipcMain.on('set-preferences', (event, data) => {
-    console.log('set-preferences');
-    console.log(event)
-    console.log(data)
+  ipcMain.on('set-chats', (event, data) => {
+    preferences.chats = data
+    return rwPref(preferences)
   })
   ipcMain.on('set-key', (event, key) => {
-    //console.log('set-key: ', key)
-    preferences.apiKey = key
+    preferences.chat = key
     return rwPref(preferences)
   })
   ipcMain.on('get-key', (event, key) => {
-    //console.log('get-key')
-    mainWindow.webContents.send("fromMain", preferences.apiKey)
+    mainWindow.webContents.send("key", preferences)
+  })
+  ipcMain.on('get-chats', (event, key) => {
+    mainWindow.webContents.send("chats", preferences.chats)
   })
 
   mainWindow.on('close', event => {
     mainWindow = null
   })
   mainWindow.loadFile('index.html')
-  
   // development
   //mainWindow.loadURL('http://localhost:3000')
   //mainWindow.webContents.openDevTools()
@@ -47,7 +47,7 @@ const createWindow = () => {
 const rwPref = async (update) => {
   const prefPath = resolve('./preferences.json')
   if (update) {
-    console.log('updating preferences: ', update)
+    //console.log('updating preferences: ', update)
     try {
       const result = await writeFile(prefPath, JSON.stringify(preferences))
       return console.log("updated preferences")

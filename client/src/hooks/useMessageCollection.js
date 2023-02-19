@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 /**
  * A custom hook for managing the conversation between the user and the AI.
@@ -8,7 +8,7 @@ import { useState } from 'react'
 const useMessageCollection = () => {
   const initialMsg = {
     id: 1,
-    chat: 1,
+    chat: "1",
     createdAt: Date.now(),
     text: '**Hello!** *How can I help you today?*',
     ai: true
@@ -17,6 +17,10 @@ const useMessageCollection = () => {
     1: [initialMsg]
   })
 
+
+  const initMessages = (data) => {
+    setMessages(data)
+  }
   /**
   * A function for adding a new message to the collection.
   *
@@ -54,7 +58,7 @@ const useMessageCollection = () => {
     })
   }
 
-  return [messages, addMessage, clearMessages, addChat];
+  return [messages, addMessage, clearMessages, addChat, initMessages];
 }
 
 export default useMessageCollection
