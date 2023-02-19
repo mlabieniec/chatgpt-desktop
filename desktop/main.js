@@ -7,7 +7,9 @@ const { Buffer } = require('node:buffer')
 let mainWindow = null
 let preferences = {
   apiKey: '',
-  chats: {}
+  chats: {
+    "1": []
+  }
 };
 
 const createWindow = () => {
@@ -45,7 +47,8 @@ const createWindow = () => {
 }
 
 const rwPref = async (update) => {
-  const prefPath = resolve('./.data.json')
+  const userData = app.getPath("userData")
+  const prefPath = resolve(userData + '/data.json')
   if (update) {
     //console.log('updating preferences: ', update)
     try {
