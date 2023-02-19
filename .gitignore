@@ -13,6 +13,7 @@ node_modules
 out
 publish.ps1
 preferences.json
+.data.json
 
 # misc
 .DS_Store

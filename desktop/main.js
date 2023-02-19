@@ -45,7 +45,7 @@ const createWindow = () => {
 }
 
 const rwPref = async (update) => {
-  const prefPath = resolve('./preferences.json')
+  const prefPath = resolve('./.data.json')
   if (update) {
     //console.log('updating preferences: ', update)
     try {
