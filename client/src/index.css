@@ -15,7 +15,7 @@
 
   /* SideBar */
   .sidebar{
-    @apply flex flex-col gap-y-4 h-screen bg-dark-grey p-5 pt-8 relative duration-500;
+    @apply flex flex-col gap-y-4 h-screen bg-dark-grey pt-8 relative duration-200;
   }
 
   .sidebar__app-bar{
@@ -44,14 +44,14 @@
   }
 
   .nav__item {
-    @apply p-4 flex h-12 items-center gap-x-4 w-screen 
+    @apply p-4 flex h-12
     rounded-md cursor-pointer 
     hover:bg-light-white
     text-white text-base;
   }
 
   .chats__item {
-    @apply p-4 flex h-12 items-center gap-x-4 w-screen 
+    @apply p-4 flex h-12 items-center 
     text-white text-base;
   }
 

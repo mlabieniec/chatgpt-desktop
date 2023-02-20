@@ -19,14 +19,6 @@ const SideBar = (props) => {
   const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
-  /**
-   * Toggles the dark mode.
-   */
-  const clearChat = () => clearMessages()
-  const SignOut = () => {
-    clearChat()
-    window.sessionStorage.clear()
-  }
 
   const scrollToBottom = () => {
     chatsEndRef.current?.scrollIntoView({behavior: "smooth"})
@@ -112,7 +104,7 @@ const SideBar = (props) => {
   }
 
   return (
-    <section className={` ${open ? "w-72" : "w-20 "} sidebar`}>
+    <section className={` ${open ? "w-72 p-5" : "w-20 "} sidebar`}>
       <div className="sidebar__app-bar">
         <div className={`sidebar__app-logo ${!open && "scale-0 hidden"}`}>
           <span className='w-8 h-8'>
@@ -127,7 +119,7 @@ const SideBar = (props) => {
         </div>
       </div>
       <div className="nav">
-        <span className='nav__item' onClick={newChat}>
+        <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={newChat}>
           <div className='nav__icons'>
             <MdAdd />
           </div>
@@ -138,7 +130,7 @@ const SideBar = (props) => {
       <div className='nav__chats'>
         {chats.map((chat, index) => (
           <div className="nav" key={index}>
-            <span className={`chats__item ${(selectedChat === chat) && 'bg-light-white'}`}>
+            <span className={`${open ? "gap-x-4 w-screen chats__item" : "chats__item"} ${(selectedChat === chat) && 'bg-light-white'}`}>
               <div className='nav__icons'>
                 <MdChatBubble onClick={() => loadChat(chat)} title="Load this chat"/>
               </div>
@@ -161,7 +153,7 @@ const SideBar = (props) => {
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
-          <span className="nav__item" onClick={updateKey}>
+          <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={updateKey}>
             <div className="nav__icons">
               <MdOutlineSecurity />
             </div>
@@ -175,7 +167,7 @@ const SideBar = (props) => {
           </span>
         </div>
         <div className="nav">
-          <a href='https://github.com/mlabieniec/chatgpt-desktop' target="_blank" className="nav__item">
+          <a href='https://github.com/mlabieniec/chatgpt-desktop' target="_blank" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
             <div className="nav__icons">
               <MdOutlineQuestionAnswer />
             </div>

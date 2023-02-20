@@ -16,7 +16,7 @@ const DarkMode = (props) => {
   const handleMode = () => setDarkTheme(!darkTheme);
   return (
     <div className="nav">
-      <span className="nav__item" onClick={handleMode}>
+      <span className={ ` ${props.open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={handleMode}>
         {darkTheme ? (
           <>
             <div className="nav__icons">
