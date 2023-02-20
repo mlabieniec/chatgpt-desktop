@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+const initialText = '**Hello!** *How can I help you today?*';
 /**
  * A custom hook for managing the conversation between the user and the AI.
  *
@@ -10,7 +11,7 @@ const useMessageCollection = () => {
     id: 1,
     chat: "1",
     createdAt: Date.now(),
-    text: '**Hello!** *How can I help you today?*',
+    text: initialText,
     ai: true,
     initial: true
   }
@@ -60,7 +61,7 @@ const useMessageCollection = () => {
         id: Date.now() + Math.floor(Math.random() * 1000000),
         chat: id,
         createdAt: Date.now(),
-        text: `**Hello!** *How can I help you today?*`,
+        text: initialText,
         ai: true,
         initial: true
       };

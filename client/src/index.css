@@ -177,6 +177,7 @@
 
   .message__actions {
     display: flex;
+    padding-top: 1em;
   }
 
   .message__spacer {
@@ -186,7 +187,15 @@
 
   .message__save {
     @apply text-slate-600 dark:text-slate-300;
-    cursor: pointer;
+  }
+
+  .message__key {
+    @apply flex text-slate-600 dark:text-slate-400;
+  }
+
+  .message__key a {
+    font-weight: bold;
+    text-decoration: underline;
   }
 
   /* Signin Page */

@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdComputer, MdPersonOutline, MdSave, MdSaveAlt } from 'react-icons/md'
+import { MdComputer, MdError, MdInfo, MdInfoOutline, MdOpenInBrowser, MdOpenInNew, MdPersonOutline, MdSave, MdSaveAlt, MdWarning } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -59,6 +59,13 @@ const ChatMessage = (props) => {
                     </button>
                   </div>
                   : ''
+                }
+                {
+                  error &&
+                  <div className="message__key">
+                    <MdOpenInNew size={24} /> &nbsp; 
+                    <a href="https://platform.openai.com/account/api-keys" target="_blank">Create or Retrieve your API Key</a>
+                  </div>
                 }
               </div>
 

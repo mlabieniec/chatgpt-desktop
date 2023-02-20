@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -108,14 +108,14 @@ const SideBar = (props) => {
       <div className="sidebar__app-bar">
         <div className={`sidebar__app-logo ${!open && "scale-0 hidden"}`}>
           <span className='w-8 h-8'>
-            <SiProbot size={32} />
+            <SiProbot size={32} onClick={() => setOpen(!open)} />
           </span>
         </div>
         <h1 className={`sidebar__app-title ${!open && "scale-0 hidden"}`}>
           My ChatGPT
         </h1>
         <div className='sidebar__btn-close' onClick={() => setOpen(!open)}>
-          {open ? <MdClose className='sidebar__btn-icon' /> : <MdMenu className='sidebar__btn-icon' />}
+          {open ? <MdClose className='sidebar__btn-icon' /> : <SiProbot className='sidebar__btn-icon' />}
         </div>
       </div>
       <div className="nav">
@@ -167,23 +167,21 @@ const SideBar = (props) => {
           </span>
         </div>
         <div className="nav">
-          <a href='https://github.com/mlabieniec/chatgpt-desktop' target="_blank" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
+          <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>
             <div className="nav__icons">
-              <MdOutlineQuestionAnswer />
+              <MdOpenInNew />
             </div>
-            <h1 className={`${!open && "hidden"}`}>Update & FAQ</h1>
+            <h1 className={`${!open && "hidden"}`}>Get API Key</h1>
+          </span>
+        </div>
+        <div className="nav">
+          <a href='https://github.com/mlabieniec/chatgpt-desktop/issues' target="_blank" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
+            <div className="nav__icons">
+              <MdOutlineSupport />
+            </div>
+            <h1 className={`${!open && "hidden"}`}>Support</h1>
           </a>
         </div>
-          { /*
-          <div className="nav">
-            <span className="nav__item" onClick={SignOut}>
-              <div className="nav__icons">
-                <MdOutlineLogout />
-              </div>
-              <h1 className={`${!open && "hidden"}`}>Clear Chat</h1>
-            </span>
-          </div>
-          */ }
       </div>
 
     </section >
