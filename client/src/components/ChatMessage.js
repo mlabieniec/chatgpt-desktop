@@ -13,7 +13,7 @@ import { SiProbot } from 'react-icons/si';
  * @param {Object} props - The properties for the component.
  */
 const ChatMessage = (props) => {
-  const { id, chat, createdAt, text, ai = false, selected } = props.message
+  const { id, chat, createdAt, text, ai = false, initial = false, error = false, selected } = props.message
 
   const onBotClick = (content) => {
     if (window.electronAPI) {
@@ -43,16 +43,23 @@ const ChatMessage = (props) => {
                 }
               }} />
 
-              <div className='message__actions'>
+              <div className={`${ai ? 'text-left message__actions' : 'text-right'}`}>
                 <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>
                   {moment(createdAt).fromNow()}
                 </div>
-                <span class="message__spacer"></span>
-                <div className={(ai)?'message__save text-right':'hidden'} onClick={() => onBotClick(text)}>
-                  <button>
-                    <MdSaveAlt size={24} title="Save File" />
-                  </button>
-                </div>
+                {
+                  ai &&
+                  <span className="message__spacer"></span>
+                }
+                {
+                  ai && !initial && !error ?
+                  <div className='message__save text-right' onClick={() => onBotClick(text)}>
+                    <button>
+                      <MdSaveAlt size={24} title="Save File" />
+                    </button>
+                  </div>
+                  : ''
+                }
               </div>
 
             </div>

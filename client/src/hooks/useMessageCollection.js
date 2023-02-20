@@ -11,7 +11,8 @@ const useMessageCollection = () => {
     chat: "1",
     createdAt: Date.now(),
     text: '**Hello!** *How can I help you today?*',
-    ai: true
+    ai: true,
+    initial: true
   }
   const [messages, setMessages] = useState({
     1: [initialMsg]
@@ -19,7 +20,12 @@ const useMessageCollection = () => {
 
 
   const initMessages = (data) => {
-    setMessages(data)
+    if (data)
+      setMessages(data)
+    else 
+      setMessages({
+        1: [initialMsg]
+      })
   }
   /**
   * A function for adding a new message to the collection.
@@ -38,7 +44,11 @@ const useMessageCollection = () => {
   const clearMessages = (chat) => {
     setMessages((prev) => {
       const result = prev
-      delete result[chat]
+      if (Object.keys(result).length === 1) {
+        result[chat] = [initialMsg]
+      } else {
+        delete result[chat]
+      }
       return result
     })
   }
@@ -51,7 +61,8 @@ const useMessageCollection = () => {
         chat: id,
         createdAt: Date.now(),
         text: `**Hello!** *How can I help you today?*`,
-        ai: true
+        ai: true,
+        initial: true
       };
       result[id] = [newDefaultMessage]
       return result;

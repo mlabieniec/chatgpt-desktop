@@ -4,22 +4,32 @@ const fs = require('fs')
 const https = require('https')
 const { readFile, writeFile } = require('node:fs/promises')
 const { resolve } = require('node:path')
-const { Buffer } = require('node:buffer')
- 
+const { Logger } = require('./logger')
+const env = process.env.NODE_ENV
+const development = (env === 'development')
 let mainWindow = null
 let preferences = {
   apiKey: '',
   chats: {
-    "1": []
+    "1": [
+      {
+        id: 1,
+        chat: "1",
+        createdAt: Date.now(),
+        text: '**Hello!** *How can I help you today?*',
+        ai: true,
+        initial: true
+      }
+    ]
   }
 };
 
 const createWindow = () => {
-
+  console.log("starting with NODE_ENV: ", env)
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    icon: __dirname + '/bot.ico',
+    icon: path.resolve(__dirname + '/bot.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
@@ -30,7 +40,7 @@ const createWindow = () => {
     return rwPref(preferences)
   })
   ipcMain.on('set-key', (event, key) => {
-    preferences.chat = key
+    preferences.apiKey = key
     return rwPref(preferences)
   })
   ipcMain.on('get-key', (event, key) => {
@@ -70,23 +80,30 @@ const createWindow = () => {
   mainWindow.on('close', event => {
     mainWindow = null
   })
-  mainWindow.loadFile('index.html')
-  // development
-  //mainWindow.loadURL('http://localhost:3000')
-  //mainWindow.webContents.openDevTools()
+
+  if (development) {
+    Logger.log('starting in development, trying to load web app from localhost:3000')
+    mainWindow.loadURL('http://localhost:3000')
+    mainWindow.webContents.openDevTools()
+  } else {
+    mainWindow.loadFile('index.html')
+  }
+  
 }
 
 const rwPref = async (update) => {
   const userData = app.getPath("userData")
   const prefPath = resolve(userData + '/data.json')
+  Logger.log('Loading data.json from: ', prefPath)
   if (update) {
-    //console.log('updating preferences: ', update)
     try {
+      Logger.log('Updating preferences')
       const result = await writeFile(prefPath, JSON.stringify(preferences))
-      return console.log("updated preferences")
+      Logger.log(result)
+      return Logger.log("updated preferences")
     } catch(error) {
-      console.log("Failed to update preferences")
-      console.log(error)
+      Logger.log("Failed to update preferences")
+      return Logger.log(error)
     }
   }
   
@@ -94,16 +111,15 @@ const rwPref = async (update) => {
     console.log('loading preferences...')
     const contents = await readFile(prefPath, { encoding: 'utf8' })
     preferences = JSON.parse(contents)
-    //console.log('loaded preferences: ', preferences)
     mainWindow.webContents.send("key", preferences.apiKey)
   } catch(error) {
     switch(error.code) {
       case 'ENOENT':
-        console.log('no preferences found, creating default')
-        const result = await writeFile(prefPath, JSON.stringify(preferences))
+        Logger.log('no preferences found, creating with default: ', preferences)
+        await writeFile(prefPath, JSON.stringify(preferences))
         return rwPref()
       default:
-        console.log(error)
+        Logger.log(error)
         break
     }
   }

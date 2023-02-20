@@ -30,7 +30,7 @@ const ChatView = (props) => {
    * @param {string} newValue - The text of the new message.
    * @param {boolean} [ai=false] - Whether the message was sent by an AI or the user.
    */
-  const updateMessage = (newValue, ai = false, selected) => {
+  const updateMessage = (newValue, ai = false, selected, error = false) => {
     const id = Date.now() + Math.floor(Math.random() * 1000000)
     const newMsg = {
       id: id,
@@ -40,6 +40,7 @@ const ChatView = (props) => {
       ai: ai,
       selected: `${selected}`
     }
+    if (error) newMsg.error = true
     addMessage(newMsg)
   }
 
@@ -88,11 +89,11 @@ const ChatView = (props) => {
         })
       }
       result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
+      updateMessage(result, true, aiModel)
     } catch (error) {
       result = error + ". Is your API Key Correct?"
+      updateMessage(result, true, aiModel, true)
     }
-
-    updateMessage(result, true, aiModel)
     setThinking(false)
 
     if (window.electronAPI) {

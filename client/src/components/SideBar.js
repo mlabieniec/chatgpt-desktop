@@ -83,12 +83,19 @@ const SideBar = (props) => {
     setSelectedChat(chat)
   }
 
-  const deleteChat = (chat) => {
-    if (messages.lenght === 1) return;
+  const deleteChat = async (chat) => {
+    try {
+      if (Object.keys(messages).length === 1) {
+        await smalltalk.confirm('Confirm Delete', 'Are you sure you want to clear this entire chat history?')
+      }
+    } catch (error) {
+      return error
+    }
     clearMessages(chat)
     setChats(Object.keys(messages))
     if (window.electronAPI) {
       window.electronAPI.setChats(messages)
+      setTimeout(initMessages)
     }
   }
 
@@ -142,7 +149,7 @@ const SideBar = (props) => {
                   <MdOutlineOpenInNew size={18} />
                 </span>
                 &nbsp;&nbsp;
-                  <span className={`${!open && "hidden"} ${chat === '1' && "disabled"} ${chat !== '1' && "nav-chat-delete"}`} onClick={() => deleteChat(chat)} title="Delete this chat">
+                  <span className={`${!open && "hidden"} ${chat !== '1' && "nav-chat-delete"}`} onClick={() => deleteChat(chat)} title="Delete this chat">
                     <MdDelete size={18}/>
                   </span>
               </div>
