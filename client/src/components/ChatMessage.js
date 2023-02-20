@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdComputer, MdPersonOutline } from 'react-icons/md'
+import { MdComputer, MdPersonOutline, MdSave, MdSaveAlt } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -15,11 +15,17 @@ import { SiProbot } from 'react-icons/si';
 const ChatMessage = (props) => {
   const { id, chat, createdAt, text, ai = false, selected } = props.message
 
+  const onBotClick = (content) => {
+    if (window.electronAPI) {
+      window.electronAPI.openSave(content)
+    }
+  }
+
   return (
     <div key={id} className={`${ai && 'flex-row-reverse'} message`}>
       {
         selected === 'DALL·E' && ai ?
-          <Image url={text} />
+          <Image onBotClick={onBotClick} url={text} />
           :
           <div className='message__wrapper'>
             <ReactMarkdown className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
@@ -37,9 +43,20 @@ const ChatMessage = (props) => {
                 }
               }} />
 
+              <div className='message__actions'>
+                <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>
+                  {moment(createdAt).fromNow()}
+                </div>
+                <span class="message__spacer"></span>
+                <div className={(ai)?'message__save text-right':'hidden'} onClick={() => onBotClick(text)}>
+                  <button>
+                    <MdSaveAlt size={24} title="Save File" />
+                  </button>
+                </div>
+              </div>
 
-            <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>{moment(createdAt).fromNow()}</div>
-          </div>}
+            </div>
+          }
 
       <div className="message__pic">
         {

@@ -175,6 +175,20 @@
     @apply animate-pulse duration-1000 h-12 w-12 dark:text-white text-black text-xl
   }
 
+  .message__actions {
+    display: flex;
+  }
+
+  .message__spacer {
+    display: flex;
+    flex: auto;
+  }
+
+  .message__save {
+    @apply text-slate-600 dark:text-slate-300;
+    cursor: pointer;
+  }
+
   /* Signin Page */
 
   .signin{
