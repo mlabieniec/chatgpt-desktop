@@ -70,9 +70,9 @@ const createWindow = () => {
   mainWindow.on('close', event => {
     mainWindow = null
   })
-  //mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html')
   // development
-  mainWindow.loadURL('http://localhost:3000')
+  //mainWindow.loadURL('http://localhost:3000')
   //mainWindow.webContents.openDevTools()
 }
 
