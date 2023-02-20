@@ -29,7 +29,8 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    icon: path.resolve(__dirname + '/bot.ico'),
+    icon: __dirname + '/icon.png',
+    title: 'My Chat GPT',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
@@ -125,6 +126,7 @@ const rwPref = async (update) => {
   }
 }
 
+app.setName('My Chat GPT')
 app.whenReady().then(() => {
   createWindow()
   rwPref()
