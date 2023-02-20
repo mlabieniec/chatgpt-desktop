@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=development electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make --targets=@electron-forge/maker-appx"
+    "make-win": "electron-forge make --targets=@electron-forge/maker-appx",
+    "make-mac": "electron-forge make --targets=@electron-forge/maker-pkg"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "@electron-forge/cli": "^6.0.5",
     "@electron-forge/maker-appx": "^6.0.5",
     "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-pkg": "^6.0.5",
     "@electron-forge/maker-rpm": "^6.0.5",
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",

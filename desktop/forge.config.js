@@ -32,6 +32,12 @@ module.exports = {
     {
       name: '@electron-forge/maker-rpm',
       config: {},
+    },
+    {
+      name: '@electron-forge/maker-pkg',
+      config: {
+        keychain: 'my-secret-ci-keychain'
+      }
     }
   ],
 };
