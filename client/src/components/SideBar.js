@@ -175,13 +175,14 @@ const SideBar = (props) => {
           </span>
         </div>
         <div className="nav">
-          <a href='https://github.com/mlabieniec/chatgpt-clone' className="nav__item">
+          <a href='https://github.com/mlabieniec/chatgpt-desktop' target="_blank" className="nav__item">
             <div className="nav__icons">
               <MdOutlineQuestionAnswer />
             </div>
             <h1 className={`${!open && "hidden"}`}>Update & FAQ</h1>
           </a>
         </div>
+          { /*
           <div className="nav">
             <span className="nav__item" onClick={SignOut}>
               <div className="nav__icons">
@@ -190,6 +191,7 @@ const SideBar = (props) => {
               <h1 className={`${!open && "hidden"}`}>Clear Chat</h1>
             </span>
           </div>
+          */ }
       </div>
 
     </section >
