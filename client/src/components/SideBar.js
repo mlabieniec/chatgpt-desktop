@@ -137,7 +137,7 @@ const SideBar = (props) => {
               <h1 onClick={() => loadChat(chat)} className={`${!open && "hidden"} nav-chat-name`}>
                 {chat === '1' && 'Chat' || chat}
               </h1>
-              <div className={`badge badge-secondary ${!open && "hidden"}`}>+{messages[chat].length}</div>
+              <div className={`badge ${!open && "hidden"}`}>+{messages[chat].length}</div>
               <span className='nav__spacer'></span>
               <div className={`nav__actions ${!open && "hidden"}`}>
                 <span className={`${!open && "hidden"} nav-chat-open`} onClick={() => loadChat(chat)} title="Load this chat">
