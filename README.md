@@ -20,6 +20,15 @@ cd client && npm i
 npm start
 ```
 
+You can access the browser client in http://localhost:3000. You can also start the electron envrionment and have it load the dev server for testing saving files etc. by leaving the react server running:
+
+> ensure react server is running on localhost:3000
+
+```bash
+cd ../desktop
+npm start
+```
+
 ## Configuration
 1. obtain your openai api key from [here](https://openai.com)
 2. run the app, click API Key, enter it, start chatting. *it will be stored only in memory and not saved across sessions
@@ -35,16 +44,14 @@ Then update `desktop/index.html` CSS and JS files to point to updated/built `cli
 cd desktop && npm run package
 ```
 
-### to run client only in the browser
-```bash
-cd client
-npm start
-```
+Or run it immediately with electron `npm start`
 
 ***Tech used***
   - openai API
   - react
+  - electron
   - tailwindcss
+  - daisyui
   - react-icons
   - react-markdown
 
