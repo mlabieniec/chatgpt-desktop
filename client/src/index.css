@@ -108,11 +108,12 @@
   /* CHATVIEW */
   .chatview{
     @apply h-screen flex-1 p-2 duration-500 overflow-hidden relative bg-slate-200
-  dark:bg-light-grey;
+  dark:bg-dark-grey;
   }
 
   .chatview__chatarea {
-    @apply h-[85vh] w-full overflow-y-scroll flex flex-col m-2 shadow-md;
+    @apply h-[85vh] overflow-y-scroll flex flex-col m-2 shadow-xl;
+    width: 98%;
   }
   
   .form{
@@ -120,19 +121,21 @@
     text-black dark:text-white duration-500;
   }
 
+  /*
   .dropdown {
     @apply h-16 px-4 rounded-xl bg-transparent hover:bg-slate-200 hover:dark:bg-dark-grey border border-light-grey
     dark:border-dark-grey focus:ring-offset-indigo-200 text-black dark:text-white transition 
     ease-in-out duration-500 text-center text-base font-semibold shadow-md 
     focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
-
+  */
+  
   .message__img {
     @apply rounded-lg shadow-lg bg-cover bg-gray-400 h-[512px] w-[512px] duration-500 ease-out;
   }
 
   .chatview__textarea-message{
-    @apply text-xl bg-transparent h-16 sm:w-screen max-h-[20rem] min-h-[4rem] p-2 dark:bg-light-grey
+    @apply text-xl sm:w-screen max-h-[20rem] min-h-[4rem] p-2 dark:bg-light-grey
     border border-light-grey dark:border-dark-grey overflow-y-hidden mx-2
     focus:ring-offset-indigo-200 focus:ring-2 focus:ring-offset-2
     resize-y rounded-xl;

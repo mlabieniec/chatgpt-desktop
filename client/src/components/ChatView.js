@@ -5,6 +5,8 @@ import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { Configuration, OpenAIApi } from 'openai'
 import smalltalk from 'smalltalk'
+import { SiImagej, SiProbot } from 'react-icons/si';
+import { MdImage } from 'react-icons/md';
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
@@ -44,21 +46,14 @@ const ChatView = (props) => {
     addMessage(newMsg)
   }
 
-  /**
-   * Sends our prompt to our API and get response to our request from openai.
-   *
-   * @param {Event} e - The submit event of the form.
-   */
-  const sendMessage = async (e) => {
-    e.preventDefault()
-
+  const sendMessage = async (aiModel) => {
     if (!key)
       return await smalltalk.alert(
         "API Key Required", 
         "Click on API Key in the sidebar and add an API key from <a href='https://openai.com/' target='_blank'><ul>openai.com</ul></a>")
     
     const newMsg = formValue
-    const aiModel = selected
+    //const aiModel = selected
     let result = ""
     setThinking(true)
     setFormValue('')
@@ -115,9 +110,13 @@ const ChatView = (props) => {
     inputRef.current.focus()
   }, [])
 
+  const onMessageSubmit = () => {
+    
+  }
+
   return (
     <div className="chatview">
-      <main className='chatview__chatarea'>
+      <main className='card chatview__chatarea'>
 
         {messages[props.chat].map((message, index) => (
           <ChatMessage key={index} message={{ ...message }} />
@@ -127,16 +126,17 @@ const ChatView = (props) => {
 
         <span ref={messagesEndRef}></span>
       </main>
-      <form className='form' onSubmit={sendMessage}>
-        <select value={selected} onChange={(e) => setSelected(e.target.value)} className="dropdown" >
-          <option>{options[0]}</option>
-          <option>{options[1]}</option>
-        </select>
-        <textarea ref={inputRef} className='chatview__textarea-message' value={formValue} onChange={(e) => setFormValue(e.target.value)} />
-        <button type="submit" className='chatview__btn-send' disabled={!formValue}>Send</button>
-      </form>
+      <div className='form'>
+        <textarea ref={inputRef} className='textarea sm:w-screen ml-3 mr-3 mb-3' value={formValue} onChange={(e) => setFormValue(e.target.value)} />
+        <div className="dropdown dropdown-top dropdown-end dropdown-hover" disabled={!formValue}>
+          <label tabIndex={0} className="btn btn-lg m-1">Send</label>
+          <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a onClick={() => sendMessage(options[0])}> <SiProbot /> {options[0]}</a></li>
+            <li><a onClick={() => sendMessage(options[1])}><MdImage /> {options[1]}</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }
-
 export default ChatView

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import useLocalStorage from './useLocalStorage';
-
+import { themeChange } from 'theme-change';
 /**
  * A custom hook for handling dark mode toggle in a React component.
  * It stores the dark mode toggle state in the local storage, so that the
@@ -15,10 +15,19 @@ const useDarkMode = () => {
   const isEnabled = typeof enabledState === 'undefined' && enabled;
 
   useEffect(() => {
-    const className = 'dark';
-    const bodyClass = window.document.body.classList;
+    
+    const className = 'dark'
+    const bodyClass = window.document.body.classList
+    const html = document.getElementsByTagName("html")[0]
+    
+    if (isEnabled) {
+      bodyClass.remove(className)
+      html.setAttribute("data-theme", "light") 
+    } else {
+      bodyClass.add(className)
+      html.setAttribute("data-theme", className) 
+    }
 
-    isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
   }, [enabled, isEnabled]);
 
   return [enabled, setEnabled];
