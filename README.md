@@ -1,9 +1,14 @@
-# ChatGPT clone with DALL.E image generation model
+# ChatGPT app with DALL.E image generation
 
-An electron/desktop application for ChatGPT clone.
+An electron-based multi-platform desktop application for interacting with OpenAI (Supports davinci and dall.e models).
 
-> a demo of the App
-<img src="_pics/demo.gif" width="800px" alt="android icon"/>
+<img src="_pics/demo.gif" width="100%" alt="Demo"/>
+
+* No servers; desktop based and data stored/saved locally
+* Works on any platform (mac, windows, and browser)
+* Use your own Openai.com API Key
+* Multiple chat rooms for organizing data
+* Download AI responses as Image and Markdown
 
 **Give it a ⭐ if you liked it 😜**
 
