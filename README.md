@@ -8,7 +8,7 @@ An electron-based multi-platform desktop application for interacting with OpenAI
 * Works on any platform (mac, windows, and browser)
 * Use your own Openai.com API Key
 * Multiple chat rooms for organizing data
-* Download AI responses as Image and Markdown
+* Download AI responses as Images and Markdown
 
 **Give it a ⭐ if you liked it 😜**
 
