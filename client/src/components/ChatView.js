@@ -5,7 +5,7 @@ import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { Configuration, OpenAIApi } from 'openai'
 import smalltalk from 'smalltalk'
-import { SiImagej, SiProbot } from 'react-icons/si';
+import { SiProbot } from 'react-icons/si';
 import { MdImage } from 'react-icons/md';
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
@@ -16,9 +16,9 @@ const ChatView = (props) => {
   const [formValue, setFormValue] = useState('')
   const [thinking, setThinking] = useState(false)
   const options = ['ChatGPT', 'DALL·E']
-  const [selected, setSelected] = useState(options[0])
   const [messages, addMessage] = useContext(ChatContext)
   const [key] = useContext(KeyContext)
+  const [toast, setToast] = useState(false)
   /**
    * Scrolls the chat area to the bottom.
    */
@@ -47,13 +47,20 @@ const ChatView = (props) => {
   }
 
   const sendMessage = async (aiModel) => {
-    if (!key)
-      return await smalltalk.alert(
+    if (!key) {
+      setToast("An API Key is Required")
+      return setTimeout(() => setToast(false), 5000)
+      /*return await smalltalk.alert(
         "API Key Required", 
-        "Click on API Key in the sidebar and add an API key from <a href='https://openai.com/' target='_blank'><ul>openai.com</ul></a>")
+        "Click on API Key in the sidebar and add an API key from <a href='https://openai.com/' target='_blank'><ul>openai.com</ul></a>")*/
+    }
     
+    if (!formValue) {
+      setToast("Please enter a message to send")
+      return setTimeout(() => setToast(false), 5000)
+    }
+
     const newMsg = formValue
-    //const aiModel = selected
     let result = ""
     setThinking(true)
     setFormValue('')
@@ -110,10 +117,6 @@ const ChatView = (props) => {
     inputRef.current.focus()
   }, [])
 
-  const onMessageSubmit = () => {
-    
-  }
-
   return (
     <div className="chatview">
       <main className='card chatview__chatarea'>
@@ -131,11 +134,22 @@ const ChatView = (props) => {
         <div className="dropdown dropdown-top dropdown-end dropdown-hover" disabled={!formValue}>
           <label tabIndex={0} className="btn btn-lg m-1">Send</label>
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li><a onClick={() => sendMessage(options[0])}> <SiProbot /> {options[0]}</a></li>
-            <li><a onClick={() => sendMessage(options[1])}><MdImage /> {options[1]}</a></li>
+            <li><button onClick={() => sendMessage(options[0])}> <SiProbot /> {options[0]}</button></li>
+            <li><button onClick={() => sendMessage(options[1])}><MdImage /> {options[1]}</button></li>
           </ul>
         </div>
       </div>
+
+      { toast &&
+        <div className="toast toast-top toast-end">
+          <div className="alert alert-info">
+            <div>
+              <span>{toast}</span>
+            </div>
+          </div>
+        </div>
+      }
+
     </div>
   )
 }

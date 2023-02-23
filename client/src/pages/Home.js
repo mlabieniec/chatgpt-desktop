@@ -2,7 +2,6 @@ import SideBar from '../components/SideBar';
 import ChatView from '../components/ChatView';
 import React, { useState } from 'react'
 import ErrorBoundary from '../components/ErrorBoundary';
-import { ChatContext } from '../context/chatContext';
 
 const Home = () => {
   const [selectedChat, setSelectedChat] = useState(1)

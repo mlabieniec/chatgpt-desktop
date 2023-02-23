@@ -14,20 +14,14 @@ An electron-based multi-platform desktop application for interacting with OpenAI
 
 ## install
 
-### Running the browser client (dev)
+### Running the browser client (dev) and the desktop client
 ```bash
-cd client && npm i
+npm install
 npm start
 ```
 
-You can access the browser client in http://localhost:3000. You can also start the electron envrionment and have it load the dev server for testing saving files etc. by leaving the react server running:
+The electron client will run and access the react client on localhost:3000 w/auto-reload enabled in the electron app. You can access the browser client directly at http://localhost:3000
 
-> ensure react server is running on localhost:3000
-
-```bash
-cd ../desktop
-npm start
-```
 
 ## Configuration
 1. obtain your openai api key from [here](https://openai.com)

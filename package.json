@@ -1,0 +1,28 @@
+{
+  "name": "chatgpt-desktop",
+  "version": "1.0.0",
+  "description": "An electron-based multi-platform desktop application for interacting with OpenAI (Supports davinci and dall.e models).",
+  "main": "index.js",
+  "workspaces": [
+    "client",
+    "desktop"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"BROWSER=none npm start --workspace=client\" \"NODE_ENV=development npm start --workspace=desktop\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlabieniec/chatgpt-desktop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mlabieniec/chatgpt-desktop/issues"
+  },
+  "homepage": "https://github.com/mlabieniec/chatgpt-desktop#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

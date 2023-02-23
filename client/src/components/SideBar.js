@@ -19,6 +19,11 @@ const SideBar = (props) => {
   const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
+  const [inputValue, setInputValue] = useState("");
+
+  const onChangeHandler = event => {
+    setInputValue(event.target.value)
+  }
 
   const scrollToBottom = () => {
     chatsEndRef.current?.scrollIntoView({behavior: "smooth"})
@@ -55,16 +60,18 @@ const SideBar = (props) => {
 
   const [last4, setLast4] = useState("");
 
-  const updateKey = async () => {
+  const updateKey = async (value) => {
+    if (!value) return
     try {
-      if (key);
-        setLast4(key.substr(key.length-4, 4));
+      if (key)
+        setLast4(key.substr(key.length-4, 4))
     } catch (error) {}
-    const msg = (last4)?`Your current API Key ends in "${last4}"`:''
-    const key = await smalltalk.prompt("Please enter your OpenAI API Key", msg)
-    if (!key) return;
-    setLast4(key.substr(key.length-4, 4));
-    addKey(key);
+    //const msg = (last4)?`Your current API Key ends in "${last4}"`:''
+    //const key = await smalltalk.prompt("Please enter your OpenAI API Key", msg)
+    const key = value
+    if (!key) return
+    setLast4(key.substr(key.length-4, 4))
+    addKey(key)
 
     if (window.electronAPI) 
       window.electronAPI.setKey(key)
@@ -156,7 +163,7 @@ const SideBar = (props) => {
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
-          <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={updateKey}>
+          <label for="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
             <div className="nav__icons">
               <MdOutlineSecurity />
             </div>
@@ -167,14 +174,14 @@ const SideBar = (props) => {
               }
               )
             </h1>
-          </span>
+          </label>
         </div>
         <div className="nav">
           <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>
             <div className="nav__icons">
               <MdOpenInNew />
             </div>
-            <h1 className={`${!open && "hidden"}`}>Get API Key</h1>
+            <h1 className={`${!open && "hidden"}`}>OpenAI Account</h1>
           </span>
         </div>
         <div className="nav">
@@ -184,6 +191,35 @@ const SideBar = (props) => {
             </div>
             <h1 className={`${!open && "hidden"}`}>Support</h1>
           </a>
+        </div>
+      </div>
+
+      <input type="checkbox" id="key-modal" class="modal-toggle" />
+      <div class="modal">
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">OpenAI Access</h3>
+          <p class="py-4">Your API Key is used to communicate with openai.com models. You can get one for free from openai.com. Use the button 
+          in the bottom left to get your API Key.</p>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Your OpenAI API Key</span>
+              <span className="label-text-alt" onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>Get One</span>
+            </label>
+            <input 
+              type="text" 
+              placeholder="Type here" 
+              className="input input-bordered w-full"
+              onChange={onChangeHandler}
+              value={inputValue} />
+          </div>
+          <div class="modal-action">
+          <label 
+            for="key-modal" 
+            className={ `${(!inputValue)?'disabled glass':''} btn btn-primary ` } 
+            onClick={() => updateKey(inputValue)}
+            >Save</label>
+            <label for="key-modal" class="btn">Close</label>
+          </div>
         </div>
       </div>
 
