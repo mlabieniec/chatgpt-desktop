@@ -103,6 +103,10 @@ const ChatView = (props) => {
     }
   }
 
+  const onFileSave = (filePath) => {
+    console.log('onFileSave: ', filePath)
+  }
+
   /**
    * Scrolls the chat area to the bottom when the messages array is updated.
    */
@@ -115,6 +119,9 @@ const ChatView = (props) => {
    */
   useEffect(() => {
     inputRef.current.focus()
+    window.electronAPI.api.receive("save", (data) => {
+      console.log('save returned for message: ', data)
+    })
   }, [])
 
   return (
@@ -122,7 +129,7 @@ const ChatView = (props) => {
       <main className='card chatview__chatarea'>
 
         {messages[props.chat].map((message, index) => (
-          <ChatMessage key={index} message={{ ...message }} />
+          <ChatMessage key={index} message={{ ...message }} onSave={onFileSave}/>
         ))}
 
         {thinking && <Thinking />}

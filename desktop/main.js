@@ -62,10 +62,12 @@ const createWindow = () => {
         console.log(saveResult)
       } 
     } else if(typeof data === 'object' && data.url) {
-      console.log('downloading image')
+      console.log('downloading image', data.url)
       let result = await dialog.showSaveDialog(mainWindow, {
         defaultPath: 'image.png'
       })
+      // { filePath: '/Users/michael/Documents/image.png', canceled: false }
+      console.log(result)
       https.get(data.url, async (res) => {
           let saveImagePath = resolve(result.filePath)
           const filePath = fs.createWriteStream(saveImagePath);
@@ -73,6 +75,20 @@ const createWindow = () => {
           filePath.on('finish',() => {
             filePath.close();
             console.log('Download Completed'); 
+            //console.log(preferences.chats);
+            preferences.chats[data.message.chat].map((v) => {
+              if (v.id === data.message.id) {
+                v.text = "file://"+result.filePath
+              }
+            });
+            //console.log(message);
+            //console.log(preferences.chats[data.message.chat]);
+            rwPref(preferences);
+            const payload = {
+              filePath: result.filePath,
+              messsage: (data.message) ? data.message: ''
+            }
+            mainWindow.webContents.send("save", payload)
         })
       })
     }

@@ -16,6 +16,9 @@ const ChatMessage = (props) => {
   const { id, chat, createdAt, text, ai = false, initial = false, error = false, selected } = props.message
 
   const onBotClick = (content) => {
+    if (typeof content === 'object') {
+      content.message = props.message
+    }
     if (window.electronAPI) {
       window.electronAPI.openSave(content)
     }
