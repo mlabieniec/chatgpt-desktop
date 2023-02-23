@@ -130,7 +130,7 @@ const SideBar = (props) => {
           <div className='nav__icons'>
             <MdAdd />
           </div>
-          <h1 className={`${!open && "hidden"}`}>New Chat</h1>
+          <h1 className={`${!open && "hidden"}`}>New Channel</h1>
         </span>
       </div>
       
@@ -142,7 +142,7 @@ const SideBar = (props) => {
                 <MdChatBubble onClick={() => loadChat(chat)} title="Load this chat"/>
               </div>
               <h1 onClick={() => loadChat(chat)} className={`${!open && "hidden"} nav-chat-name`}>
-                {chat === '1' && 'Chat' || chat}
+                {chat === '1' && 'Default' || chat}
               </h1>
               <div className={`badge ${!open && "hidden"}`}>+{messages[chat].length}</div>
               <span className='nav__spacer'></span>

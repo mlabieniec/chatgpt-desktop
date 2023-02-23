@@ -44,15 +44,18 @@ const ChatView = (props) => {
     }
     if (error) newMsg.error = true
     addMessage(newMsg)
+    if (window.electronAPI) {
+      window.electronAPI.setChats({
+        chats: messages,
+        message: newMsg
+      })
+    }
   }
 
   const sendMessage = async (aiModel) => {
     if (!key) {
       setToast("An API Key is Required")
       return setTimeout(() => setToast(false), 5000)
-      /*return await smalltalk.alert(
-        "API Key Required", 
-        "Click on API Key in the sidebar and add an API key from <a href='https://openai.com/' target='_blank'><ul>openai.com</ul></a>")*/
     }
     
     if (!formValue) {
@@ -97,10 +100,6 @@ const ChatView = (props) => {
       updateMessage(result, true, aiModel, true)
     }
     setThinking(false)
-
-    if (window.electronAPI) {
-      window.electronAPI.setChats(messages)
-    }
   }
 
   const onFileSave = (filePath) => {
@@ -119,9 +118,11 @@ const ChatView = (props) => {
    */
   useEffect(() => {
     inputRef.current.focus()
+    /*
     window.electronAPI.api.receive("save", (data) => {
       console.log('save returned for message: ', data)
     })
+    */
   }, [])
 
   return (
