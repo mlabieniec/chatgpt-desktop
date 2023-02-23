@@ -32,6 +32,14 @@ The electron client will run and access the react client on localhost:3000 w/aut
 ./build.sh
 ```
 
+You can run electron with the built client files with:
+
+```bash
+npm run electron
+```
+
+This will load the production build files from the local disk. 
+
 To package a platform release for the platform you are on:
 ```bash
 cd desktop && npm run package
