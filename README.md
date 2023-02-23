@@ -23,6 +23,7 @@ npm start
 
 The electron client will run and access the react client on localhost:3000 w/auto-reload enabled in the electron app. You can access the browser client directly at http://localhost:3000
 
+> Local images will not load while in development since permission to load a local file will be denied. To see the images in the feed you need to build and then run. You can also verify data by checking the local data file `message.text` value and/or the local Pictures directory, they will be stored in `${HOME}/Pictures/chatgpt/${chat.id}/${message.id}.png`.
 
 ## Configuration
 1. obtain your openai api key from [here](https://openai.com)
