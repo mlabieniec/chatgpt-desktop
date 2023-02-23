@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"BROWSER=none npm start --workspace=client\" \"NODE_ENV=development npm start --workspace=desktop\""
+    "start": "concurrently \"BROWSER=none npm start --workspace=client\" \"NODE_ENV=development npm start --workspace=desktop\"",
+    "build": "npm run build --workspace=client",
+    "electron": "npm run start-prod --workspace=desktop"
   },
   "repository": {
     "type": "git",

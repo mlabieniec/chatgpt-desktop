@@ -29,16 +29,15 @@ The electron client will run and access the react client on localhost:3000 w/aut
 
 ## Build
 ```bash
-cd client && npm run build
+./build.sh
 ```
 
-Then update `desktop/index.html` CSS and JS files to point to updated/built `client/` files. Then use forge to build.
-
+To package a platform release for the platform you are on:
 ```bash
 cd desktop && npm run package
 ```
 
-Or run it immediately with electron `npm start`
+or use forge directly (see npm script) with your chosen platform/config.
 
 ***Tech used***
   - openai API
