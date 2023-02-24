@@ -19,10 +19,15 @@ const SideBar = (props) => {
   const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("")
+  const [channelValue, setChannelValue] = useState("")
 
   const onChangeHandler = event => {
     setInputValue(event.target.value)
+  }
+
+  const onChannelChangeHandler = event => {
+    setChannelValue(event.target.value)
   }
 
   const scrollToBottom = () => {
@@ -80,6 +85,7 @@ const SideBar = (props) => {
   const loadChat = (chat) => {
     props.handleChatChange(chat)
     setSelectedChat(chat)
+    scrollToBottom()
   }
 
   const deleteChat = async (chat) => {
@@ -93,21 +99,30 @@ const SideBar = (props) => {
     clearMessages(chat)
     setChats(Object.keys(messages))
     if (window.electronAPI) {
-      window.electronAPI.setChats(messages)
-      setTimeout(initMessages)
+      window.electronAPI.setChats({
+        chats: messages,
+        message: chat
+      })
     }
   }
 
-  const newChat = async () => {
+  const newChat = async (chatName) => {
     let chats = Object.keys(messages)
-    let nextId = chats.length + 1
-    let chatName = await smalltalk.prompt('New Chat', `Enter a short descriptive name for your chat`, `Chat ${nextId}`)
+    //let nextId = chats.length + 1
+    //let chatName = await smalltalk.prompt('New Chat', `Enter a short descriptive name for your chat`, `Chat ${nextId}`)
 
     props.handleChatChange(chatName)
     addChat(chatName)
     setChats(Object.keys(messages))
     setSelectedChat(chatName)
     setTimeout(scrollToBottom, 200)
+
+    if (window.electronAPI) {
+      window.electronAPI.setChats({
+        chats: messages,
+        message: chatName
+      })
+    }
   }
 
   return (
@@ -126,12 +141,12 @@ const SideBar = (props) => {
         </div>
       </div>
       <div className="nav">
-        <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={newChat}>
+        <label for="channel-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setChannelValue("Channel")}>
           <div className='nav__icons'>
             <MdAdd />
           </div>
           <h1 className={`${!open && "hidden"}`}>New Channel</h1>
-        </span>
+        </label>
       </div>
       
       <div className='nav__chats'>
@@ -194,11 +209,38 @@ const SideBar = (props) => {
         </div>
       </div>
 
+      <input type="checkbox" id="channel-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">New Channel</h3>
+          <p clclassNameass="py-4">Enter a name for your new channel</p>
+          <div className="form-control w-full">
+              <label className='label'>
+                <span className='label-text'>Channel Name</span>
+              </label>
+              <input 
+                type="text" 
+                placeholder='Enter a Channel Name' 
+                className="input input-bordered w-full" 
+                onChange={onChannelChangeHandler}
+                value={channelValue} />
+          </div>
+          <div class="modal-action">
+            <label 
+              for="channel-modal" 
+              className={ `${(!channelValue)?'disabled glass':''} btn btn-primary ` } 
+              onClick={() => newChat(channelValue)}
+              >Save</label>
+              <label for="channel-modal" class="btn">Cancel</label>
+          </div>
+        </div>
+      </div>
+      
       <input type="checkbox" id="key-modal" class="modal-toggle" />
-      <div class="modal">
-        <div class="modal-box">
-          <h3 class="font-bold text-lg">OpenAI Access</h3>
-          <p class="py-4">Your API Key is used to communicate with openai.com models. You can get one for free from openai.com. Use the button 
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">OpenAI Access</h3>
+          <p className="py-4">Your API Key is used to communicate with openai.com models. You can get one for free from openai.com. Use the button 
           in the bottom left to get your API Key.</p>
           <div className="form-control w-full">
             <label className="label">

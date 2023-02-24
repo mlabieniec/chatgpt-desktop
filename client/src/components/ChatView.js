@@ -26,6 +26,10 @@ const ChatView = (props) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
+  useEffect(() => {
+    scrollToBottom()
+  }, [props.chat])
+
   /**
    * Adds a new message to the chat.
    *
@@ -137,6 +141,7 @@ const ChatView = (props) => {
 
         <span ref={messagesEndRef}></span>
       </main>
+
       <div className='form'>
         <textarea ref={inputRef} className='textarea sm:w-screen ml-3 mr-3 mb-3' value={formValue} onChange={(e) => setFormValue(e.target.value)} />
         <div className="dropdown dropdown-top dropdown-end dropdown-hover" disabled={!formValue}>
