@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -125,6 +125,12 @@ const SideBar = (props) => {
     }
   }
 
+  const logout = () => {
+    if (window.electronAPI) {
+      window.electronAPI.logOut()
+    }
+  }
+
   return (
     <section className={` ${open ? "w-72 p-5" : "w-20 "} sidebar`}>
       <div className="sidebar__app-bar">
@@ -200,12 +206,12 @@ const SideBar = (props) => {
           </span>
         </div>
         <div className="nav">
-          <a href='https://github.com/mlabieniec/chatgpt-desktop/issues' target="_blank" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
+          <button onClick={logout} className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
             <div className="nav__icons">
-              <MdOutlineSupport />
+              <MdLogout />
             </div>
-            <h1 className={`${!open && "hidden"}`}>Support</h1>
-          </a>
+            <h1 className={`${!open && "hidden"}`}>Log out</h1>
+          </button>
         </div>
       </div>
 

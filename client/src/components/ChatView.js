@@ -4,7 +4,6 @@ import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { Configuration, OpenAIApi } from 'openai'
-import smalltalk from 'smalltalk'
 import { SiProbot } from 'react-icons/si';
 import { MdImage } from 'react-icons/md';
 /**

@@ -3,15 +3,11 @@
   "version": "1.0.0",
   "description": "An electron-based multi-platform desktop application for interacting with OpenAI (Supports davinci and dall.e models).",
   "main": "index.js",
-  "workspaces": [
-    "client",
-    "desktop"
-  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"BROWSER=none npm start --workspace=client\" \"NODE_ENV=development npm start --workspace=desktop\"",
+    "start": "concurrently \"BROWSER=none cd client && npm start\" \"NODE_ENV=development npm run electron\"",
     "build": "./build.sh",
-    "electron": "npm run start-prod --workspace=desktop"
+    "electron": "cd desktop && npm run start-prod"
   },
   "repository": {
     "type": "git",
