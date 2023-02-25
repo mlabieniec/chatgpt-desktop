@@ -1,5 +1,5 @@
 import React from 'react'
-import { MdComputer, MdError, MdInfo, MdInfoOutline, MdOpenInBrowser, MdOpenInNew, MdPersonOutline, MdSave, MdSaveAlt, MdWarning } from 'react-icons/md'
+import { MdComputer, MdError, MdInfo, MdInfoOutline, MdOpenInBrowser, MdOpenInNew, MdOutlineSaveAlt, MdPersonOutline, MdSave, MdSaveAlt, MdWarning } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -47,29 +47,24 @@ const ChatMessage = (props) => {
               }} />
 
               <div className={`${ai ? 'text-left message__actions' : 'text-right'}`}>
-                <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>
-                  {moment(createdAt).fromNow()}
-                </div>
-                {
-                  ai &&
-                  <span className="message__spacer"></span>
-                }
-                {
+              {
                   ai && !initial && !error ?
-                  <div className='message__save text-right' onClick={() => onBotClick(text)}>
-                    <button>
-                      <MdSaveAlt size={24} title="Save File" />
-                    </button>
+                  <div className='message__save' onClick={() => onBotClick(text)}>
+                    <MdOutlineSaveAlt size={20} title="Save File" />
                   </div>
                   : ''
                 }
-                {
+                
+                <div className={`${ai ? 'text-left' : 'text-right'} message__createdAt`}>
+                &nbsp;&nbsp; {moment(createdAt).fromNow()}
+                </div>
+                {/*
                   error &&
                   <div className="message__key">
                     <MdOpenInNew size={24} /> &nbsp; 
                     <a href="https://platform.openai.com/account/api-keys" target="_blank">Create or Retrieve your API Key</a>
                   </div>
-                }
+              */}
               </div>
 
             </div>

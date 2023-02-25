@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout, MdAccountBox } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -21,6 +21,7 @@ const SideBar = (props) => {
   const [selectedChat, setSelectedChat] = useState(1)
   const [inputValue, setInputValue] = useState("")
   const [channelValue, setChannelValue] = useState("")
+  const [profile, setProfile] = useState({})
 
   const onChangeHandler = event => {
     setInputValue(event.target.value)
@@ -48,6 +49,8 @@ const SideBar = (props) => {
           }
         })
         window.electronAPI.getKey()
+        window.electronAPI.getProfile()
+          .then(data => setProfile(data))
       }
     }
   }, [])
@@ -186,6 +189,17 @@ const SideBar = (props) => {
         <div className="nav">
           <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
             <div className="nav__icons">
+              <MdAccountBox />
+            </div>
+            <h1 className={`${!open && "hidden"}`}>
+              Account
+            </h1>
+          </label>
+        </div>
+        { /*
+        <div className="nav">
+          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
+            <div className="nav__icons">
               <MdOutlineSecurity />
             </div>
             <h1 className={`${!open && "hidden"}`}>
@@ -205,14 +219,7 @@ const SideBar = (props) => {
             <h1 className={`${!open && "hidden"}`}>OpenAI Account</h1>
           </span>
         </div>
-        <div className="nav">
-          <button onClick={logout} className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
-            <div className="nav__icons">
-              <MdLogout />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>Log out</h1>
-          </button>
-        </div>
+        */}
       </div>
 
       <input type="checkbox" id="channel-modal" className="modal-toggle" />
@@ -245,27 +252,20 @@ const SideBar = (props) => {
       <input type="checkbox" id="key-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">OpenAI Access</h3>
-          <p className="py-4">Your API Key is used to communicate with openai.com models. You can get one for free from openai.com. Use the button 
-          in the bottom left to get your API Key.</p>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Your OpenAI API Key</span>
-              <span className="label-text-alt" onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>Get One</span>
-            </label>
-            <input 
-              type="text" 
-              placeholder="Type here" 
-              className="input input-bordered w-full"
-              onChange={onChangeHandler}
-              value={inputValue} />
-          </div>
+          <h3 className="font-bold text-lg">My Account</h3>
+          { /* Google Profile */}
+            { (profile.sub && profile.sub.split("-").includes('google')) &&
+                <p className="py-4">
+                  You are authenticated with Google
+                </p>
+            }
+          
           <div className="modal-action">
           <label 
             htmlFor="key-modal" 
-            className={ `${(!inputValue)?'disabled glass':''} btn btn-primary ` } 
-            onClick={() => updateKey(inputValue)}
-            >Save</label>
+            className={ `${(!inputValue)?'disabled glass':''} btn btn-warning ` } 
+            onClick={logout}
+            >Log Out</label>
             <label htmlFor="key-modal" className="btn">Close</label>
           </div>
         </div>

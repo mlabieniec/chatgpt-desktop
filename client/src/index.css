@@ -156,7 +156,7 @@
 
   /* ChatMessage */
   .message{
-    @apply  gap-2 p-5 m-2 flex items-start justify-between;
+    @apply  gap-2 p-5 m-4 flex items-start justify-between;
   }
 
   .message__wrapper{

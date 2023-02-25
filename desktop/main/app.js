@@ -40,7 +40,8 @@ function createAppWindow() {
     })
     mainWindow = win;
     ipcMain.handle('auth:get-profile', authService.getProfile);
-    ipcMain.handle('api:get-private-data', apiService.getPrivateData);
+    ipcMain.handle('api:text', (event,data) => apiService.getText(data));
+    ipcMain.handle('api:image', (event,data) => apiService.getImage(data));
     ipcMain.on('auth:log-out', async () => {
       BrowserWindow.getAllWindows().forEach(window => window.close());
       const logoutWindow = new BrowserWindow({
@@ -53,6 +54,9 @@ function createAppWindow() {
         app.quit();
       });
     });
+    ipcMain.on('get-text', (event, data) => {
+        apiService.getText(data)
+    })
     ipcMain.on('set-chats', (event, data) => {
       preferences.chats = data.chats
       return rwPref(data.message)

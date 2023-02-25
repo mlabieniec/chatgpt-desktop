@@ -3,7 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 contextBridge.exposeInMainWorld('electronAPI', {
     getProfile: () => ipcRenderer.invoke('auth:get-profile'),
     logOut: () => ipcRenderer.send('auth:log-out'),
-    getPrivateData: () => ipcRenderer.invoke('api:get-private-data'),
+    getImage: (data) => ipcRenderer.invoke('api:image', data),
+    getText: (data) => ipcRenderer.invoke('api:text', data),
     setChats: (data) => ipcRenderer.send('set-chats', data),
     getChats: (data) => ipcRenderer.send('get-chats', data),
     openSave: (data) => ipcRenderer.send('open-save', data),

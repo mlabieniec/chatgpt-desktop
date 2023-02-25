@@ -5,9 +5,8 @@ const useApi = () => {
   const [call, setCall] = useState("")
 
   useEffect(() => {
-    
     if (typeof call === 'object') {
-        console.log(call);
+        
     }
 
   }, [call]);

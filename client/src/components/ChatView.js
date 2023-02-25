@@ -59,10 +59,6 @@ const ChatView = (props) => {
   }
 
   const sendMessage = async (aiModel) => {
-    if (!key) {
-      setToast("An API Key is Required")
-      return setTimeout(() => setToast(false), 5000)
-    }
     
     if (!formValue) {
       setToast("Please enter a message to send")
@@ -74,39 +70,27 @@ const ChatView = (props) => {
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
-    setCall({
-      "message": newMsg
-    })
-    /*
     try {
       let response = null;
       if (aiModel === 'DALL·E') {
-        response = await openai.createImage({
-          prompt: `${newMsg}`,
-          n: 1,
-          size: "512x512",
-        })
+        if (window.electronAPI) {
+          response = await window.electronAPI.getImage({
+            'text': newMsg
+          })
+        }
       } else {
-        response = await openai.createCompletion({
-          model: 'text-davinci-003',
-          prompt: `
-    I want you to reply to all my questions in markdown format. 
-    Q: ${newMsg}?.
-    A: `,
-          temperature: 0.5,
-          max_tokens: 1024,
-          //top_p: 0.5,
-          frequency_penalty: 0.5,
-          presence_penalty: 0.2,
-        })
+        if (window.electronAPI) {
+          response = await window.electronAPI.getText({
+            'text': newMsg
+          })
+        }
       }
-      result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
+      result = (aiModel === 'ChatGPT')?response.choices[0].text:response.data[0].url
       updateMessage(result, true, aiModel)
     } catch (error) {
-      result = error + ". Is your API Key Correct?"
+      result = error
       updateMessage(result, true, aiModel, true)
     }
-    */
     setThinking(false)
   }
 
@@ -142,7 +126,7 @@ const ChatView = (props) => {
         ))}
 
         {thinking && <Thinking />}
-
+          
         <span ref={messagesEndRef}></span>
       </main>
 
@@ -159,10 +143,11 @@ const ChatView = (props) => {
 
       { toast &&
         <div className="toast toast-top toast-end">
-          <div className="alert alert-info">
-            <div>
-              <span>{toast}</span>
-            </div>
+          <div className="alert alert-warning shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>{toast}</span>
+          </div>
           </div>
         </div>
       }

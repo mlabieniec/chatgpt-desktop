@@ -6,6 +6,7 @@ const app = express();
 const { Configuration, OpenAIApi } = require("openai");
 //app.get('/public', (req, res) => res.send('Everyone in the world can read this message.'));
 
+app.use(express.json());
 app.use(jwt({
   // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
   secret: jwksRsa.expressJwtSecret({
@@ -26,10 +27,27 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-app.post('/text', async (req, res) => {
-  const newMsg = req.body.message;
+app.post ('/image', async (req,res) => {
+  console.log('[server] request body: ', req.body);
+  const newMsg = req.body.text;
   try {
-    let response = response = await openai.createCompletion({
+    let response = await openai.createImage({
+      prompt: `${newMsg}`,
+      n: 1,
+      size: "512x512",
+    });
+    result = response.data;
+    res.json(result);
+  } catch(error) {
+    result = { "error": error }
+    res.send(result)
+  }
+});
+app.post('/text', async (req, res) => {
+  console.log('[server] request body: ', req.body);
+  const newMsg = req.body.text;
+  try {
+    let response = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: `
 I want you to reply to all my questions in markdown format. 
@@ -44,9 +62,9 @@ A: `,
     result = response.data;
     res.json(result);
   } catch (error) {
-    result = { "error": error + ". Is your API Key Correct?" }
+    result = { "error": error }
     res.send(result)
   }
 });
 
-app.listen(3001, () => console.log('Example app listening on port 3001!'));
+app.listen(3001, () => console.log('Server listening on port 3001!'));
