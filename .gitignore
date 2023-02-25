@@ -14,6 +14,7 @@ out
 build.ps1
 data.json
 env.json
+.env
 
 # misc
 .DS_Store

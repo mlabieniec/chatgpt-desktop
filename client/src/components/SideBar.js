@@ -147,7 +147,7 @@ const SideBar = (props) => {
         </div>
       </div>
       <div className="nav">
-        <label for="channel-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setChannelValue("Channel")}>
+        <label htmlFor="channel-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setChannelValue("Channel")}>
           <div className='nav__icons'>
             <MdAdd />
           </div>
@@ -184,7 +184,7 @@ const SideBar = (props) => {
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
-          <label for="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
+          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
             <div className="nav__icons">
               <MdOutlineSecurity />
             </div>
@@ -219,7 +219,7 @@ const SideBar = (props) => {
       <div className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">New Channel</h3>
-          <p clclassNameass="py-4">Enter a name for your new channel</p>
+          <p className="py-4">Enter a name for your new channel</p>
           <div className="form-control w-full">
               <label className='label'>
                 <span className='label-text'>Channel Name</span>
@@ -231,18 +231,18 @@ const SideBar = (props) => {
                 onChange={onChannelChangeHandler}
                 value={channelValue} />
           </div>
-          <div class="modal-action">
+          <div className="modal-action">
             <label 
-              for="channel-modal" 
+              htmlFor="channel-modal" 
               className={ `${(!channelValue)?'disabled glass':''} btn btn-primary ` } 
               onClick={() => newChat(channelValue)}
               >Save</label>
-              <label for="channel-modal" class="btn">Cancel</label>
+              <label htmlFor="channel-modal" className="btn">Cancel</label>
           </div>
         </div>
       </div>
       
-      <input type="checkbox" id="key-modal" class="modal-toggle" />
+      <input type="checkbox" id="key-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">OpenAI Access</h3>
@@ -260,13 +260,13 @@ const SideBar = (props) => {
               onChange={onChangeHandler}
               value={inputValue} />
           </div>
-          <div class="modal-action">
+          <div className="modal-action">
           <label 
-            for="key-modal" 
+            htmlFor="key-modal" 
             className={ `${(!inputValue)?'disabled glass':''} btn btn-primary ` } 
             onClick={() => updateKey(inputValue)}
             >Save</label>
-            <label for="key-modal" class="btn">Close</label>
+            <label htmlFor="key-modal" className="btn">Close</label>
           </div>
         </div>
       </div>

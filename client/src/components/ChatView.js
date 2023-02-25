@@ -1,11 +1,13 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext, useCallback } from 'react'
 import ChatMessage from './ChatMessage'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
-import { Configuration, OpenAIApi } from 'openai'
 import { SiProbot } from 'react-icons/si';
 import { MdImage } from 'react-icons/md';
+import useApi from '../hooks/useApi';
+
+
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
@@ -18,6 +20,7 @@ const ChatView = (props) => {
   const [messages, addMessage] = useContext(ChatContext)
   const [key] = useContext(KeyContext)
   const [toast, setToast] = useState(false)
+  const [call, setCall] = useApi()
   /**
    * Scrolls the chat area to the bottom.
    */
@@ -71,10 +74,11 @@ const ChatView = (props) => {
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
-      try {
-      const openai = new OpenAIApi(new Configuration({
-        apiKey: key,
-      }))
+    setCall({
+      "message": newMsg
+    })
+    /*
+    try {
       let response = null;
       if (aiModel === 'DALL·E') {
         response = await openai.createImage({
@@ -102,6 +106,7 @@ const ChatView = (props) => {
       result = error + ". Is your API Key Correct?"
       updateMessage(result, true, aiModel, true)
     }
+    */
     setThinking(false)
   }
 
