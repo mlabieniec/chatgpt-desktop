@@ -105,6 +105,10 @@
     color: gray;
   }
 
+  .editor__wrapper {
+    @apply flex-1
+  }
+  
 
   /* CHATVIEW */
   .chatview{
@@ -113,7 +117,7 @@
   }
 
   .chatview__chatarea {
-    @apply h-[85vh] overflow-y-scroll flex flex-col m-2 shadow-xl;
+    @apply h-[82vh] overflow-y-scroll flex flex-col m-2 shadow-xl;
     width: 98%;
   }
   
@@ -165,6 +169,10 @@
 
   .message__markdown{
     @apply text-xl text-slate-700 dark:text-slate-200;
+  }
+
+  .message__editor {
+    width: 100%;
   }
 
   .message__createdAt{

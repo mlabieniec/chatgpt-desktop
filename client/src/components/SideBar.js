@@ -16,7 +16,6 @@ const SideBar = (props) => {
   const chatsEndRef = useRef()
   const [open, setOpen] = useState(true)
   const [messages, setMessages, clearMessages, addChat, initMessages] = useContext(ChatContext)
-  const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
   const [inputValue, setInputValue] = useState("")
@@ -40,10 +39,6 @@ const SideBar = (props) => {
       init = true
       if (window.electronAPI && window.electronAPI.api) {
         window.electronAPI.api.receive("key", (data) => {
-          if (data.apiKey) {
-            addKey(data.apiKey)
-            setLast4(data.apiKey.substr(data.apiKey.length-4, 4))
-          }
           if (data.chats) {
             initMessages(data.chats)
           }
@@ -65,26 +60,7 @@ const SideBar = (props) => {
     setSelectedChat(chats[chats.length-1])
     props.handleChatChange(chats[chats.length-1])
   }, [chats])
-
-  const [last4, setLast4] = useState("");
-
-  const updateKey = async (value) => {
-    if (!value) return
-    try {
-      if (key)
-        setLast4(key.substr(key.length-4, 4))
-    } catch (error) {}
-    //const msg = (last4)?`Your current API Key ends in "${last4}"`:''
-    //const key = await smalltalk.prompt("Please enter your OpenAI API Key", msg)
-    const key = value
-    if (!key) return
-    setLast4(key.substr(key.length-4, 4))
-    addKey(key)
-
-    if (window.electronAPI) 
-      window.electronAPI.setKey(key)
-  }
-
+ 
   const loadChat = (chat) => {
     props.handleChatChange(chat)
     setSelectedChat(chat)
@@ -110,10 +86,6 @@ const SideBar = (props) => {
   }
 
   const newChat = async (chatName) => {
-    let chats = Object.keys(messages)
-    //let nextId = chats.length + 1
-    //let chatName = await smalltalk.prompt('New Chat', `Enter a short descriptive name for your chat`, `Chat ${nextId}`)
-
     props.handleChatChange(chatName)
     addChat(chatName)
     setChats(Object.keys(messages))
@@ -187,7 +159,7 @@ const SideBar = (props) => {
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
-          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
+          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
             <div className="nav__icons">
               <MdAccountBox />
             </div>
@@ -196,30 +168,6 @@ const SideBar = (props) => {
             </h1>
           </label>
         </div>
-        { /*
-        <div className="nav">
-          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
-            <div className="nav__icons">
-              <MdOutlineSecurity />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>
-              API Key (***
-              {
-                last4
-              }
-              )
-            </h1>
-          </label>
-        </div>
-        <div className="nav">
-          <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>
-            <div className="nav__icons">
-              <MdOpenInNew />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>OpenAI Account</h1>
-          </span>
-        </div>
-        */}
       </div>
 
       <input type="checkbox" id="channel-modal" className="modal-toggle" />

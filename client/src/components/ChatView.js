@@ -4,7 +4,7 @@ import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { SiProbot } from 'react-icons/si';
-import { MdImage } from 'react-icons/md';
+import { MdCode, MdImage } from 'react-icons/md';
 import useApi from '../hooks/useApi';
 
 
@@ -16,7 +16,7 @@ const ChatView = (props) => {
   const inputRef = useRef()
   const [formValue, setFormValue] = useState('')
   const [thinking, setThinking] = useState(false)
-  const options = ['ChatGPT', 'DALL·E']
+  const options = ['ChatGPT', 'DALL·E', 'Codex']
   const [messages, addMessage] = useContext(ChatContext)
   const [key] = useContext(KeyContext)
   const [toast, setToast] = useState(false)
@@ -78,14 +78,21 @@ const ChatView = (props) => {
             'text': newMsg
           })
         }
-      } else {
+      } else if(aiModel === 'ChatGPT') {
         if (window.electronAPI) {
           response = await window.electronAPI.getText({
             'text': newMsg
           })
         }
+      } else if(aiModel === 'Codex') {
+        console.log('[client] getting code: ', newMsg)
+        if (window.electronAPI) {
+          response = await window.electronAPI.getCode({
+            'text': newMsg
+          })
+        }
       }
-      result = (aiModel === 'ChatGPT')?response.choices[0].text:response.data[0].url
+      result = (aiModel === 'ChatGPT' || aiModel === 'Codex')?response.choices[0].text:response.data[0].url
       updateMessage(result, true, aiModel)
     } catch (error) {
       result = error
@@ -137,6 +144,7 @@ const ChatView = (props) => {
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
             <li><button onClick={() => sendMessage(options[0])}> <SiProbot /> {options[0]}</button></li>
             <li><button onClick={() => sendMessage(options[1])}><MdImage /> {options[1]}</button></li>
+            <li><button onClick={() => sendMessage(options[2])}> <MdCode /> {options[2]}</button></li>
           </ul>
         </div>
       </div>

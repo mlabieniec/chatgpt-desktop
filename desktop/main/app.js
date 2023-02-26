@@ -41,6 +41,7 @@ function createAppWindow() {
     mainWindow = win;
     ipcMain.handle('auth:get-profile', authService.getProfile);
     ipcMain.handle('api:text', (event,data) => apiService.getText(data));
+    ipcMain.handle('api:code', (event,data) => apiService.getCode(data));
     ipcMain.handle('api:image', (event,data) => apiService.getImage(data));
     ipcMain.on('auth:log-out', async () => {
       BrowserWindow.getAllWindows().forEach(window => window.close());

@@ -19,6 +19,7 @@
     }
   ],
   "dependencies": {
+    "@monaco-editor/react": "^4.4.6",
     "concurrently": "^7.6.0",
     "daisyui": "^2.50.2",
     "moment": "^2.29.4",

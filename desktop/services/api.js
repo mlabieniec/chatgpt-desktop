@@ -25,6 +25,17 @@ async function getText(data) {
   return result.data;
 }
 
+async function getCode(data) {
+  Logger.log('[desktop] Getting code: ', data);
+  const result = await axios.post(`${apiUrl}/code`, data, {
+    headers: {
+      'Authorization': `Bearer ${authService.getAccessToken()}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  return result.data;
+}
+
 async function getImage(data) {
   const result = await axios.post(`${apiUrl}/image`, data, {
     headers: {
@@ -38,5 +49,6 @@ async function getImage(data) {
 module.exports = {
   getPrivateData,
   getText,
-  getImage
+  getImage,
+  getCode
 }

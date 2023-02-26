@@ -27,6 +27,16 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+app.get('/models', async (req, res) => {
+  try {
+    let response = await openai.listModels()
+    result = response.data;
+    res.json(result);
+  } catch (error) {
+    result = { "error": error }
+    res.send(result)
+  }
+})
 app.post ('/image', async (req,res) => {
   console.log('[server] request body: ', req.body);
   const newMsg = req.body.text;
@@ -61,6 +71,45 @@ A: `,
       })
     result = response.data;
     res.json(result);
+  } catch (error) {
+    result = { "error": error }
+    res.send(result)
+  }
+});
+app.post('/code', async (req, res) => {
+  console.log('[server] request body: ', req.body);
+  const newMsg = req.body.text;
+  try {
+    /**
+     * code-davinci-002
+     * Most capable Codex model. 
+     * Particularly good at translating natural language 
+     * to code. In addition to completing code, also 
+     * supports inserting completions within code.
+     * 
+     * code-cushman-001
+     * Almost as capable as Davinci Codex, but slightly 
+     * faster. This speed advantage may make it preferable 
+     * for real-time applications.
+     * 
+     * https://platform.openai.com/docs/models/codex
+     */
+    let response = await openai.createCompletion({
+        model: 'text-davinci-002',
+        prompt: `
+/*
+${newMsg}
+Comment and explain the code
+*/        
+`,
+        temperature: 0.5,
+        max_tokens: 1024,
+        frequency_penalty: 0.5,
+        presence_penalty: 0.2,
+      })
+    result = response.data;
+    console.log('[server] response: ', response)
+    res.json(result)
   } catch (error) {
     result = { "error": error }
     res.send(result)

@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     logOut: () => ipcRenderer.send('auth:log-out'),
     getImage: (data) => ipcRenderer.invoke('api:image', data),
     getText: (data) => ipcRenderer.invoke('api:text', data),
+    getCode: (data) => ipcRenderer.invoke('api:code', data),
     setChats: (data) => ipcRenderer.send('set-chats', data),
     getChats: (data) => ipcRenderer.send('get-chats', data),
     openSave: (data) => ipcRenderer.send('open-save', data),
