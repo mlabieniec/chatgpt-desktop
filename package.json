@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"npm run client\" \"NODE_ENV=development npm run server\" \"NODE_ENV=development npm run electron\"",
+    "prod": "concurrently \"NODE_ENV=development npm run server\" \"NODE_ENV=production cd desktop && npm run start-prod\"",
     "build": "./build.sh",
-    "electron": "cd desktop && npm run start",
+    "electron": "cd desktop && npm start",
     "client": "cd client && npm start",
     "server": "cd server && npm start"
   },

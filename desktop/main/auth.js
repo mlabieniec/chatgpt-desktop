@@ -6,7 +6,6 @@ let win = null;
 
 function createAuthWindow() {
   destroyAuthWin();
-
   win = new BrowserWindow({
     width: 600,
     height: 800,
