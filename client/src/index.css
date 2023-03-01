@@ -168,7 +168,7 @@
   }
 
   .message__markdown{
-    @apply text-xl text-slate-700 dark:text-slate-200;
+    @apply text-slate-700 dark:text-slate-200;
   }
 
   .message__editor {

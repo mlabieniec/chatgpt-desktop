@@ -2,7 +2,8 @@ const express = require('express');
 const { expressjwt: jwt } = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const envVariables = require('dotenv').config({path: './.env'}).parsed;
-const app = express();
+const expressWs = require('express-ws')(express());
+const app = expressWs.app;
 const { Configuration, OpenAIApi } = require("openai");
 //app.get('/public', (req, res) => res.send('Everyone in the world can read this message.'));
 
@@ -60,24 +61,45 @@ app.post('/text', async (req, res) => {
     let response = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: `
-I want you to reply to all my questions in markdown format. 
-Q: ${newMsg}?.
-A: `,
-        temperature: 0.5,
+I want you to reply to all my questions in markdown format. ${newMsg}?.`,
+        temperature: 0.2,
         max_tokens: 1024,
         //top_p: 0.5,
         frequency_penalty: 0.5,
         presence_penalty: 0.2,
       })
+      /*
+      response.data.on("data", (data) => {
+        console.log('data: ', data)
+        const lines = data
+          ?.toString()
+          ?.split("\n")
+          .filter((line) => line.trim() !== "");
+        for (const line of lines) {
+          const message = line.replace(/^data: /, "");
+          if (message === "[DONE]") {
+            break; // Stream finished
+          }
+          try {
+            const parsed = JSON.parse(message);
+            console.log(parsed);
+          } catch (error) {
+            console.error("Could not JSON parse stream message", message, error);
+          }
+        }
+      });
+      */
+    console.log('[server] response: ', response);
     result = response.data;
-    res.json(result);
+    return res.json(result);
   } catch (error) {
-    result = { "error": error }
-    res.send(result)
+    console.log('[server] error: ', error);
+    result = { "error": error };
+    return res.send(result);
   }
 });
 app.post('/code', async (req, res) => {
-  console.log('[server] request body: ', req.body);
+  //console.log('[server] request body: ', req.body);
   const newMsg = req.body.text;
   try {
     /**
@@ -108,12 +130,19 @@ Comment and explain the code
         presence_penalty: 0.2,
       })
     result = response.data;
-    console.log('[server] response: ', response)
+    //console.log('[server] response: ', response)
     res.json(result)
   } catch (error) {
     result = { "error": error }
     res.send(result)
   }
+});
+
+app.ws('/chat', function(ws, req) {
+  ws.on('message', function(msg) {
+    console.log(msg);
+  });
+  console.log('socket', req.testing);
 });
 
 app.listen(3001, () => console.log('Server listening on port 3001!'));

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { MdOutlineSaveAlt, MdPersonOutline, MdImage, MdCode, MdOpenInFull } from 'react-icons/md'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import remarkGfm from 'remark-gfm'
 import moment from 'moment'
 import Image from './Image'
@@ -61,20 +61,26 @@ const ChatMessage = (props) => {
   const MarkdownMessage = (props) => {
     return (
       <div className='message__wrapper'>
-        <ReactMarkdown className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
+        <ReactMarkdown 
+          className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
           children={text}
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           components={{
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || 'language-js')
-              return !inline && match ? (
+              //!inline && 
+              return match ? (
                 <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, '')}
-                  style={atomDark} language={match[1]} PreTag="div" {...props}
+                  //.replace(/\n$/, '')
+                  children={String(children)}
+                  style={materialDark} 
+                  language={match[1]} 
+                  //PreTag="div" {...props}
                 />
               ) : (<code className={className} {...props}>{children} </code>)
             }
-          }} />
+          }} 
+          />
           <MessageActions props={props} />
         </div>
     )
@@ -86,7 +92,6 @@ const ChatMessage = (props) => {
         <Editor
           className='message__editor'
               height='250px'
-              defaultLanguage="javascript"
               language={lang}
               defaultValue={text}
               theme="vs-dark"

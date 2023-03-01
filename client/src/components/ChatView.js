@@ -18,9 +18,7 @@ const ChatView = (props) => {
   const [thinking, setThinking] = useState(false)
   const options = ['ChatGPT', 'DALL·E', 'Codex']
   const [messages, addMessage] = useContext(ChatContext)
-  const [key] = useContext(KeyContext)
   const [toast, setToast] = useState(false)
-  const [call, setCall] = useApi()
   /**
    * Scrolls the chat area to the bottom.
    */
@@ -117,11 +115,6 @@ const ChatView = (props) => {
    */
   useEffect(() => {
     inputRef.current.focus()
-    /*
-    window.electronAPI.api.receive("save", (data) => {
-      console.log('save returned for message: ', data)
-    })
-    */
   }, [])
 
   return (
@@ -134,7 +127,7 @@ const ChatView = (props) => {
 
         {thinking && <Thinking />}
           
-        <span ref={messagesEndRef}></span>
+        <div ref={messagesEndRef}></div>
       </main>
 
       <div className='form'>

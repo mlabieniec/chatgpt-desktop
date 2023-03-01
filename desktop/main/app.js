@@ -28,6 +28,7 @@ let preferences = {
 let mainWindow = null;
 function createAppWindow() {
     console.log("starting with NODE_ENV: ", env)
+    apiService.connectWs()
     let win = new BrowserWindow({
         width: 1280,
         height: 900,

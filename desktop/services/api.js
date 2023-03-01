@@ -1,10 +1,20 @@
-const axios = require('axios');
-const authService = require('./auth');
-const envVariables = require('../env');
-const { Logger } = require('../services/logger');
+const axios = require('axios')
+const authService = require('./auth')
+const envVariables = require('../env')
+const { Logger } = require('../services/logger')
 const env = process.env.NODE_ENV || 'production'
-const apiUrl = envVariables[env].apiUrl;
-Logger.log('apiUrl: ', apiUrl);
+const apiUrl = envVariables[env].apiUrl
+const { WebSocket } = require('ws')
+
+async function connectWs() {
+  let ws = new WebSocket(`ws://${apiUrl.split('//')[1]}/`)
+  ws.on("message", (message) => {
+    var str = message.toString()
+    console.log("Message received: ", str)
+    //mainWindow.webContents.send('some-event', str)
+ })
+}
+
 async function getPrivateData(data) {
   const result = await axios.post(`${apiUrl}/text`, { 'message': 'test' }, {
     headers: {
@@ -50,5 +60,6 @@ module.exports = {
   getPrivateData,
   getText,
   getImage,
-  getCode
+  getCode,
+  connectWs
 }
