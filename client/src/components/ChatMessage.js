@@ -64,6 +64,7 @@ const ChatMessage = (props) => {
         <ReactMarkdown 
           className={`message__markdown ${ai ? 'text-left' : 'text-right'}`}
           children={text}
+          //disallowedElements={['p']}
           remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
           components={{
             code({ node, inline, className, children, ...props }) {

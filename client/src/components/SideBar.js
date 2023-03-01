@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout, MdAccountBox } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout, MdAccountBox, MdSettings } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -134,9 +134,9 @@ const SideBar = (props) => {
         {chats.map((chat, index) => (
           <div className="nav" key={index}>
             <span className={`${open ? "gap-x-4 w-screen chats__item" : "chats__item"} ${(selectedChat === chat) && 'bg-light-white'}`}>
-              <div className='nav__icons'>
-                <MdChatBubble onClick={() => loadChat(chat)} title="Load this chat"/>
-              </div>
+              <label htmlFor='settings-modal' className='nav__icons'>
+                <MdSettings onClick={() => loadChat(chat)} title="Load this chat"/>
+              </label>
               <h1 onClick={() => loadChat(chat)} className={`${!open && "hidden"} nav-chat-name`}>
                 {chat === '1' && 'Default' || chat}
               </h1>
@@ -209,16 +209,27 @@ const SideBar = (props) => {
             }
           
           <div className="modal-action">
-          <label 
-            htmlFor="key-modal" 
-            className={ `${(!inputValue)?'disabled glass':''} btn btn-warning ` } 
-            onClick={logout}
-            >Log Out</label>
-            <label htmlFor="key-modal" className="btn">Close</label>
+            <label 
+              htmlFor="key-modal" 
+              className={ `${(!inputValue)?'disabled glass':''} btn btn-warning ` } 
+              onClick={logout}
+              >Log Out</label>
+              <label htmlFor="key-modal" className="btn">Close</label>
           </div>
+
         </div>
       </div>
 
+      <input type="checkbox" id="settings-modal" className="modal-toggle" />
+      <div className='modal'>
+        <div className='modal-box'>
+        <h3 className="font-bold text-lg">Channel {selectedChat} Settings</h3>
+        <p className="py-4">Render Settings</p>
+        <div className="modal-action">
+          <label htmlFor="settings-modal" className="btn">Close</label>
+        </div>
+        </div>
+      </div>
     </section >
   )
 }
