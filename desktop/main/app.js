@@ -33,7 +33,7 @@ function createAppWindow() {
         width: 1280,
         height: 900,
         icon: __dirname + '../icon.png',
-        title: 'My Chat GPT',
+        title: 'ChatGPT',
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true
@@ -57,7 +57,7 @@ function createAppWindow() {
       });
     });
     ipcMain.on('get-text', (event, data) => {
-        apiService.getText(data)
+        return apiService.getText(data)
     })
     ipcMain.on('set-chats', (event, data) => {
       preferences.chats = data.chats

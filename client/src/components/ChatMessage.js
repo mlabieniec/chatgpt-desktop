@@ -101,6 +101,8 @@ const ChatMessage = (props) => {
         <div className="dropdown dropdown-top dropdown-start dropdown-hover">
           <label tabIndex={0} className="btn btn-sm m-1">{lang}</label>
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box">
+          <li><button className='btn-sm' onClick={() => setLang('html')}> <MdCode /> {'HTML'}</button></li>
+          <li><button className='btn-sm' onClick={() => setLang('css')}> <MdCode /> {'CSS'}</button></li>
             <li><button className='btn-sm' onClick={() => setLang('javascript')}> <MdCode /> {'JavaScript'}</button></li>
             <li><button className='btn-sm' onClick={() => setLang('python')}><MdCode /> {'Python'}</button></li>
             <li><button className='btn-sm' onClick={() => setLang('bash')}> <MdCode /> {'Bash'}</button></li>

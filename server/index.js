@@ -24,7 +24,7 @@ app.use(jwt({
 }));
 
 const configuration = new Configuration({
-  apiKey: envVariables.openaiApiKey,
+  apiKey: envVariables.openaiKey,
 });
 const openai = new OpenAIApi(configuration);
 
@@ -55,7 +55,7 @@ app.post ('/image', async (req,res) => {
   }
 });
 app.post('/text', async (req, res) => {
-  console.log('[server] request body: ', req.body);
+  //console.log('[server] request body: ', req.body);
   const newMsg = req.body.text;
   try {
     let response = await openai.createCompletion({

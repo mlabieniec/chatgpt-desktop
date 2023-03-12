@@ -1,14 +1,14 @@
 module.exports = {
   packagerConfig: {
     'icon': './icon.icns',
-    'name': 'My ChatGPT',
+    'name': 'ChatGPT',
     'ignore': './node_modules',
     'version': '1.0.1',
     'version-string':{
       'CompanyName': 'AppXen',
       'FileDescription': 'Chat with OpenAI',
       'OriginalFilename': 'mychatgpt',
-      'ProductName': 'My ChatGPT',
+      'ProductName': 'ChatGPT',
       'InternalName': 'mychatgpt'
     }
   },

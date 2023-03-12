@@ -13,7 +13,7 @@ const createWindow = async () => {
     createAuthWindow();
   }
 }
-app.setName('My Chat GPT')
+app.setName('ChatGPT')
 app.whenReady().then(() => {
   createWindow()
 })
