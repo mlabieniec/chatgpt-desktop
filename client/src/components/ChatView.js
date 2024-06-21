@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext, useCallback } from 'react'
 import ChatMessage from './ChatMessage'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
-import { OpenAI } from 'openai'
-//import smalltalk from 'smalltalk'
 import { SiProbot } from 'react-icons/si';
-import { MdImage } from 'react-icons/md';
+import { MdCode, MdImage } from 'react-icons/md';
+import useApi from '../hooks/useApi';
+
+
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
  */
@@ -15,9 +16,8 @@ const ChatView = (props) => {
   const inputRef = useRef()
   const [formValue, setFormValue] = useState('')
   const [thinking, setThinking] = useState(false)
-  const options = ['ChatGPT', 'DALL·E']
+  const options = ['ChatGPT', 'DALL·E', 'Codex']
   const [messages, addMessage] = useContext(ChatContext)
-  const [key] = useContext(KeyContext)
   const [toast, setToast] = useState(false)
   /**
    * Scrolls the chat area to the bottom.
@@ -57,10 +57,6 @@ const ChatView = (props) => {
   }
 
   const sendMessage = async (aiModel) => {
-    if (!key) {
-      setToast("An API Key is Required")
-      return setTimeout(() => setToast(false), 5000)
-    }
     
     if (!formValue) {
       setToast("Please enter a message to send")
@@ -72,36 +68,32 @@ const ChatView = (props) => {
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
-      try {
-      const openai = new OpenAI({
-        apiKey: key,
-        dangerouslyAllowBrowser: true
-      })
+    try {
       let response = null;
       if (aiModel === 'DALL·E') {
-        response = await openai.createImage({
-          prompt: `${newMsg}`,
-          n: 1,
-          size: "512x512",
-        })
-      } else {
-        response = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
-          prompt: `
-    I want you to reply to all my questions in markdown format. 
-    Q: ${newMsg}?.
-    A: `,
-          temperature: 0.5,
-          max_tokens: 1024,
-          //top_p: 0.5,
-          frequency_penalty: 0.5,
-          presence_penalty: 0.2,
-        })
+        if (window.electronAPI) {
+          response = await window.electronAPI.getImage({
+            'text': newMsg
+          })
+        }
+      } else if(aiModel === 'ChatGPT') {
+        if (window.electronAPI) {
+          response = await window.electronAPI.getText({
+            'text': newMsg
+          })
+        }
+      } else if(aiModel === 'Codex') {
+        console.log('[client] getting code: ', newMsg)
+        if (window.electronAPI) {
+          response = await window.electronAPI.getCode({
+            'text': newMsg
+          })
+        }
       }
-      result = (aiModel === 'ChatGPT')?response.data.choices[0].text:response.data.data[0].url
+      result = (aiModel === 'ChatGPT' || aiModel === 'Codex')?response.choices[0].text:response.data[0].url
       updateMessage(result, true, aiModel)
     } catch (error) {
-      result = error + ". Is your API Key Correct?"
+      result = error
       updateMessage(result, true, aiModel, true)
     }
     setThinking(false)
@@ -123,11 +115,6 @@ const ChatView = (props) => {
    */
   useEffect(() => {
     inputRef.current.focus()
-    /*
-    window.electronAPI.api.receive("save", (data) => {
-      console.log('save returned for message: ', data)
-    })
-    */
   }, [])
 
   return (
@@ -139,8 +126,8 @@ const ChatView = (props) => {
         ))}
 
         {thinking && <Thinking />}
-
-        <span ref={messagesEndRef}></span>
+          
+        <div ref={messagesEndRef}></div>
       </main>
 
       <div className='form'>
@@ -150,16 +137,18 @@ const ChatView = (props) => {
           <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
             <li><button onClick={() => sendMessage(options[0])}> <SiProbot /> {options[0]}</button></li>
             <li><button onClick={() => sendMessage(options[1])}><MdImage /> {options[1]}</button></li>
+            <li><button onClick={() => sendMessage(options[2])}> <MdCode /> {options[2]}</button></li>
           </ul>
         </div>
       </div>
 
       { toast &&
         <div className="toast toast-top toast-end">
-          <div className="alert alert-info">
-            <div>
-              <span>{toast}</span>
-            </div>
+          <div className="alert alert-warning shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>{toast}</span>
+          </div>
           </div>
         </div>
       }

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport } from 'react-icons/md'
+import { MdClose, MdMenu, MdAdd, MdOutlineLogout, MdOutlineQuestionAnswer, MdOutlineSecurity, MdOutlineBolt, MdOpenInNew, MdDelete, MdChatBubble, MdOpenInBrowser, MdOpenInFull, MdOpenInNewOff, MdOutlineOpenInNew, MdOutlineSupport, MdLogout, MdAccountBox, MdSettings } from 'react-icons/md'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext'
 import DarkMode from './DarkMode'
@@ -16,11 +16,11 @@ const SideBar = (props) => {
   const chatsEndRef = useRef()
   const [open, setOpen] = useState(true)
   const [messages, setMessages, clearMessages, addChat, initMessages] = useContext(ChatContext)
-  const [key, addKey] = useContext(KeyContext)
   const [chats, setChats] = useState([1])
   const [selectedChat, setSelectedChat] = useState(1)
   const [inputValue, setInputValue] = useState("")
   const [channelValue, setChannelValue] = useState("")
+  const [profile, setProfile] = useState({})
 
   const onChangeHandler = event => {
     setInputValue(event.target.value)
@@ -39,15 +39,13 @@ const SideBar = (props) => {
       init = true
       if (window.electronAPI && window.electronAPI.api) {
         window.electronAPI.api.receive("key", (data) => {
-          if (data.apiKey) {
-            addKey(data.apiKey)
-            setLast4(data.apiKey.substr(data.apiKey.length-4, 4))
-          }
           if (data.chats) {
             initMessages(data.chats)
           }
         })
         window.electronAPI.getKey()
+        window.electronAPI.getProfile()
+          .then(data => setProfile(data))
       }
     }
   }, [])
@@ -62,26 +60,7 @@ const SideBar = (props) => {
     setSelectedChat(chats[chats.length-1])
     props.handleChatChange(chats[chats.length-1])
   }, [chats])
-
-  const [last4, setLast4] = useState("");
-
-  const updateKey = async (value) => {
-    if (!value) return
-    try {
-      if (key)
-        setLast4(key.substr(key.length-4, 4))
-    } catch (error) {}
-    //const msg = (last4)?`Your current API Key ends in "${last4}"`:''
-    //const key = await smalltalk.prompt("Please enter your OpenAI API Key", msg)
-    const key = value
-    if (!key) return
-    setLast4(key.substr(key.length-4, 4))
-    addKey(key)
-
-    if (window.electronAPI) 
-      window.electronAPI.setKey(key)
-  }
-
+ 
   const loadChat = (chat) => {
     props.handleChatChange(chat)
     setSelectedChat(chat)
@@ -107,10 +86,6 @@ const SideBar = (props) => {
   }
 
   const newChat = async (chatName) => {
-    let chats = Object.keys(messages)
-    //let nextId = chats.length + 1
-    //let chatName = await smalltalk.prompt('New Chat', `Enter a short descriptive name for your chat`, `Chat ${nextId}`)
-
     props.handleChatChange(chatName)
     addChat(chatName)
     setChats(Object.keys(messages))
@@ -122,6 +97,12 @@ const SideBar = (props) => {
         chats: messages,
         message: chatName
       })
+    }
+  }
+
+  const logout = () => {
+    if (window.electronAPI) {
+      window.electronAPI.logOut()
     }
   }
 
@@ -141,7 +122,7 @@ const SideBar = (props) => {
         </div>
       </div>
       <div className="nav">
-        <label for="channel-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setChannelValue("Channel")}>
+        <label htmlFor="channel-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setChannelValue("Channel")}>
           <div className='nav__icons'>
             <MdAdd />
           </div>
@@ -153,9 +134,9 @@ const SideBar = (props) => {
         {chats.map((chat, index) => (
           <div className="nav" key={index}>
             <span className={`${open ? "gap-x-4 w-screen chats__item" : "chats__item"} ${(selectedChat === chat) && 'bg-light-white'}`}>
-              <div className='nav__icons'>
-                <MdChatBubble onClick={() => loadChat(chat)} title="Load this chat"/>
-              </div>
+              <label htmlFor='settings-modal' className='nav__icons'>
+                <MdSettings onClick={() => loadChat(chat)} title="Load this chat"/>
+              </label>
               <h1 onClick={() => loadChat(chat)} className={`${!open && "hidden"} nav-chat-name`}>
                 {chat === '1' && 'Default' || chat}
               </h1>
@@ -178,34 +159,14 @@ const SideBar = (props) => {
       <div className="nav__bottom">
         <DarkMode open={open} />
         <div className="nav">
-          <label for="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => setInputValue(key)}>
+          <label htmlFor="key-modal" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
             <div className="nav__icons">
-              <MdOutlineSecurity />
+              <MdAccountBox />
             </div>
             <h1 className={`${!open && "hidden"}`}>
-              API Key (***
-              {
-                last4
-              }
-              )
+              Account
             </h1>
           </label>
-        </div>
-        <div className="nav">
-          <span className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` } onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>
-            <div className="nav__icons">
-              <MdOpenInNew />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>OpenAI Account</h1>
-          </span>
-        </div>
-        <div className="nav">
-          <a href='https://github.com/mlabieniec/chatgpt-desktop/issues' target="_blank" className={ ` ${open ? "nav__item items-center gap-x-4 w-screen" : "nav__item"} ` }>
-            <div className="nav__icons">
-              <MdOutlineSupport />
-            </div>
-            <h1 className={`${!open && "hidden"}`}>Support</h1>
-          </a>
         </div>
       </div>
 
@@ -213,7 +174,7 @@ const SideBar = (props) => {
       <div className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">New Channel</h3>
-          <p clclassNameass="py-4">Enter a name for your new channel</p>
+          <p className="py-4">Enter a name for your new channel</p>
           <div className="form-control w-full">
               <label className='label'>
                 <span className='label-text'>Channel Name</span>
@@ -225,46 +186,50 @@ const SideBar = (props) => {
                 onChange={onChannelChangeHandler}
                 value={channelValue} />
           </div>
-          <div class="modal-action">
+          <div className="modal-action">
             <label 
-              for="channel-modal" 
+              htmlFor="channel-modal" 
               className={ `${(!channelValue)?'disabled glass':''} btn btn-primary ` } 
               onClick={() => newChat(channelValue)}
               >Save</label>
-              <label for="channel-modal" class="btn">Cancel</label>
+              <label htmlFor="channel-modal" className="btn">Cancel</label>
           </div>
         </div>
       </div>
       
-      <input type="checkbox" id="key-modal" class="modal-toggle" />
+      <input type="checkbox" id="key-modal" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">OpenAI Access</h3>
-          <p className="py-4">Your API Key is used to communicate with openai.com models. You can get one for free from openai.com. Use the button 
-          in the bottom left to get your API Key.</p>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Your OpenAI API Key</span>
-              <span className="label-text-alt" onClick={() => window.open('https://platform.openai.com/account/api-keys', '_blank')}>Get One</span>
-            </label>
-            <input 
-              type="text" 
-              placeholder="Type here" 
-              className="input input-bordered w-full"
-              onChange={onChangeHandler}
-              value={inputValue} />
+          <h3 className="font-bold text-lg">My Account</h3>
+          { /* Google Profile */}
+            { (profile.sub && profile.sub.split("-").includes('google')) &&
+                <p className="py-4">
+                  You are authenticated with Google
+                </p>
+            }
+          
+          <div className="modal-action">
+            <label 
+              htmlFor="key-modal" 
+              className={ `${(!inputValue)?'disabled glass':''} btn btn-warning ` } 
+              onClick={logout}
+              >Log Out</label>
+              <label htmlFor="key-modal" className="btn">Close</label>
           </div>
-          <div class="modal-action">
-          <label 
-            for="key-modal" 
-            className={ `${(!inputValue)?'disabled glass':''} btn btn-primary ` } 
-            onClick={() => updateKey(inputValue)}
-            >Save</label>
-            <label for="key-modal" class="btn">Close</label>
-          </div>
+
         </div>
       </div>
 
+      <input type="checkbox" id="settings-modal" className="modal-toggle" />
+      <div className='modal'>
+        <div className='modal-box'>
+        <h3 className="font-bold text-lg">Channel {selectedChat} Settings</h3>
+        <p className="py-4">Render Settings</p>
+        <div className="modal-action">
+          <label htmlFor="settings-modal" className="btn">Close</label>
+        </div>
+        </div>
+      </div>
     </section >
   )
 }
