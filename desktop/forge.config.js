@@ -1,5 +1,10 @@
+'use strict';
+
+const { bundle } = require('./bundler');
+
 module.exports = {
   packagerConfig: {
+    'prune': false,
     'icon': './icon.icns',
     'name': 'My ChatGPT',
     'ignore': './node_modules',
@@ -11,6 +16,19 @@ module.exports = {
       'ProductName': 'My ChatGPT',
       'InternalName': 'mychatgpt'
     }
+  },
+  hooks: {
+    packageAfterCopy: async (
+      /** @type {any} */ forgeConfig,
+      /** @type {string} */ buildPath,
+      /** @type {string} */ electronVersion,
+      /** @type {string} */ platform,
+      /** @type {string} */ arch,
+    ) => {
+      // this is a workaround until we find a proper solution
+      // for running electron-forge in a mono repository
+      await bundle(__dirname, buildPath);
+    },
   },
   rebuildConfig: {},
   makers: [

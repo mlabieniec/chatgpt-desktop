@@ -3,8 +3,8 @@ import ChatMessage from './ChatMessage'
 import { ChatContext } from '../context/chatContext'
 import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
-import { Configuration, OpenAIApi } from 'openai'
-import smalltalk from 'smalltalk'
+import { OpenAI } from 'openai'
+//import smalltalk from 'smalltalk'
 import { SiProbot } from 'react-icons/si';
 import { MdImage } from 'react-icons/md';
 /**
@@ -73,9 +73,10 @@ const ChatView = (props) => {
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
       try {
-      const openai = new OpenAIApi(new Configuration({
+      const openai = new OpenAI({
         apiKey: key,
-      }))
+        dangerouslyAllowBrowser: true
+      })
       let response = null;
       if (aiModel === 'DALL·E') {
         response = await openai.createImage({
@@ -84,8 +85,8 @@ const ChatView = (props) => {
           size: "512x512",
         })
       } else {
-        response = await openai.createCompletion({
-          model: 'text-davinci-003',
+        response = await openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
           prompt: `
     I want you to reply to all my questions in markdown format. 
     Q: ${newMsg}?.
