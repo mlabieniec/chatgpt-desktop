@@ -19,9 +19,12 @@
     }
   ],
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.4",
     "@monaco-editor/react": "^4.4.6",
+    "axios": "^1.7.2",
     "concurrently": "^7.6.0",
     "daisyui": "^2.50.2",
+    "electron": "^31.0.2",
     "moment": "^2.29.4",
     "openai": "^4.0.0",
     "react": "^18.2.0",
@@ -35,6 +38,7 @@
     "theme-change": "^2.3.0"
   },
   "scripts": {
+    "https-start": "HTTPS=true SSL_CRT_FILE=cert.pem SSL_KEY_FILE=key.pem npm start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

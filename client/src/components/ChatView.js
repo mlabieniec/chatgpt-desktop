@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect, useContext, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import ChatMessage from './ChatMessage'
 import { ChatContext } from '../context/chatContext'
-import { KeyContext } from '../context/keyContext';
 import Thinking from './Thinking'
 import { SiProbot } from 'react-icons/si';
 import { MdCode, MdImage } from 'react-icons/md';
-import useApi from '../hooks/useApi';
 
 
 /**
@@ -65,11 +63,11 @@ const ChatView = (props) => {
 
     const newMsg = formValue
     let result = ""
+    let response = "";
     setThinking(true)
     setFormValue('')
     updateMessage(newMsg, false, aiModel)
     try {
-      let response = null;
       if (aiModel === 'DALL·E') {
         if (window.electronAPI) {
           response = await window.electronAPI.getImage({
@@ -90,6 +88,10 @@ const ChatView = (props) => {
           })
         }
       }
+      
+      //const rawResponse = await fetch(process.env.REACT_APP_SERVER + 'text')
+      //const response = response.json()
+      //console.log('response: ', response)
       result = (aiModel === 'ChatGPT' || aiModel === 'Codex')?response.choices[0].text:response.data[0].url
       updateMessage(result, true, aiModel)
     } catch (error) {

@@ -4,7 +4,6 @@ const { bundle } = require('./bundler');
 
 module.exports = {
   packagerConfig: {
-    'prune': false,
     'icon': './icon.icns',
     'name': 'ChatGPT',
     'ignore': './node_modules',

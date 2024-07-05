@@ -26,12 +26,14 @@ async function getPrivateData(data) {
 }
 
 async function getText(data) {
+  Logger.log('[desktop]=>api.getText.apiUrl: ', apiUrl);
   const result = await axios.post(`${apiUrl}/text`, data, {
     headers: {
       'Authorization': `Bearer ${authService.getAccessToken()}`,
       'Content-Type': 'application/json'
     }
   });
+  Logger.log('[desktop]=>api.getText.result: ', result);
   return result.data;
 }
 

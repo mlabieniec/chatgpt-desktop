@@ -4,7 +4,7 @@ const { resolve } = require('node:path')
 const path = require('path')
 const fs = require('fs')
 const https = require('https')
-const env = process.env.NODE_ENV || 'production';
+const env = process.env.NODE_ENV || 'development';
 const development = (process.env.NODE_ENV === 'development');
 const { Logger } = require('../services/logger');
 const authService = require('../services/auth');
@@ -104,7 +104,7 @@ function createAppWindow() {
     })
     if (development) {
         Logger.log('starting in development, trying to load web app from localhost:3000')
-        win.loadURL('http://localhost:3000')
+        win.loadURL('https://localhost:3000')
         win.webContents.openDevTools()
     } else {
         win.loadFile('./client/index.html')

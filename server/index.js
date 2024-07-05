@@ -5,7 +5,13 @@ const envVariables = require('dotenv').config({path: './.env'}).parsed;
 const expressWs = require('express-ws')(express());
 const app = expressWs.app;
 const { Configuration, OpenAIApi } = require("openai");
+const { CohereClient } = require("cohere-ai");
+
 //app.get('/public', (req, res) => res.send('Everyone in the world can read this message.'));
+
+const cohere = new CohereClient({
+  token: "o2NHDBivyP330MrMBW6UfCcKIIZJuwoj74iGgxW3"
+});
 
 app.use(express.json());
 app.use(jwt({
@@ -55,9 +61,19 @@ app.post ('/image', async (req,res) => {
   }
 });
 app.post('/text', async (req, res) => {
-  //console.log('[server] request body: ', req.body);
+  console.log('[server] request body: ', req.body);
   const newMsg = req.body.text;
   try {
+    
+    let response = await cohere.chat({
+      model: "command-r-plus",
+      message: `
+I want you to reply to all my questions in markdown format. ${newMsg}?.`
+    });
+    console.log('[server] response: ', response);
+    const result = response.text;
+
+    /*
     let response = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: `
@@ -68,29 +84,10 @@ I want you to reply to all my questions in markdown format. ${newMsg}?.`,
         frequency_penalty: 0.5,
         presence_penalty: 0.2,
       })
-      /*
-      response.data.on("data", (data) => {
-        console.log('data: ', data)
-        const lines = data
-          ?.toString()
-          ?.split("\n")
-          .filter((line) => line.trim() !== "");
-        for (const line of lines) {
-          const message = line.replace(/^data: /, "");
-          if (message === "[DONE]") {
-            break; // Stream finished
-          }
-          try {
-            const parsed = JSON.parse(message);
-            console.log(parsed);
-          } catch (error) {
-            console.error("Could not JSON parse stream message", message, error);
-          }
-        }
-      });
-      */
     console.log('[server] response: ', response);
     result = response.data;
+    */
+
     return res.json(result);
   } catch (error) {
     console.log('[server] error: ', error);
@@ -145,4 +142,14 @@ app.ws('/chat', function(ws, req) {
   console.log('socket', req.testing);
 });
 
-app.listen(3001, () => console.log('Server listening on port 3001!'));
+app.listen(3001, () => {
+  console.log('Server listening on port 3001!');
+  /* (async () => {
+    let response = await cohere.chat({
+    model: "command-r-plus",
+    message: `
+  I want you to reply to all my questions in markdown format. Give me an example of a good joke?.`
+  });
+  console.log('[server] response: ', response);
+})() */
+});
